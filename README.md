@@ -1,6 +1,6 @@
 # Idea-Wall
 
-#Membros:#
+##Membros:
 - Isabelle Vitória
 - Jacioneide Michelle
 - Rita de Cássia
