@@ -24,11 +24,11 @@
 | 01/05 - 15/05 | Definir rotas; Planejar páginas; Escolher bibliotecas |
 | 18/05 - 31/05 | Modelar banco de dados; Definir entidades; Criar documentação |
 
-## Etapa 2: Design & Setup (Junho-Julho)
+## Etapa 2: Design (Junho-Julho)
 
 | Semanas | Atividades |
 |--------|-----------|
-| 01/06 - 15/06 | Criar wireframes; Definir identidade visual |
+| 01/06 - 15/06 | Definir identidade visual |
 | 16/06 - 30/06 | Criar layout base; Definir componentes |
 | 01/07 - 15/07 | Configurar frontend (Next.js) e formatação |
 | 16/07 - 31/07 | Configurar backend; Banco de dados; Variáveis de ambiente |
@@ -42,7 +42,7 @@
 | 01/09 - 15/09 | Regras de negócio; Padronizar API |
 | 16/09 - 30/09 | Integração frontend/backend; Autenticação e autorização |
 
-## Etapa 4: Testes & Deploy (Outubro-Novembro-Dezembro)
+## Etapa 4: Testes (Outubro-Novembro-Dezembro)
 
 | Semanas | Atividades |
 |--------|-----------|
