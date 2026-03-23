@@ -1,4 +1,4 @@
-# Idea-Wall
+# Idea Wall
 
 ## Membros:
 - Isabelle Vitória
