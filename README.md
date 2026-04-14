@@ -15,7 +15,7 @@
 - Backend: FastAPI
 
 ## Cronograma:
-##Etapa 1: Planejamento & Estrutura (Abril-Maio)
+## Etapa 1: Planejamento & Estrutura (Abril-Maio)
 
 | Semanas | Atividades |
 |--------|-----------|
