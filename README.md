@@ -50,3 +50,6 @@
 | 09/11 - 23/11 | Testes unitários; Testes de integração |
 | 24/11 - 08/12 | Corrigir bugs; Refatorar; Otimizar performance |
 | 09/12 - 21/12 | Ajustes finais; Preparar produção|
+
+
+### Link para o Documento V01: https://docs.google.com/document/d/1U-aY2taIQOtJLpWy-2ADQsik5AfMI-u342KKN4aKbJI/edit?usp=sharing
