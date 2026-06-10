@@ -11,11 +11,11 @@
   A plataforma tem como objetivo central melhorar a produtividade individual e em equipe, oferecendo uma interface simples e responsiva, além de recursos que promovem a colaboração, como atribuição de tarefas, prazos, descrições detalhadas e atualizações em tempo real.
 
 ## Tecnologias:
-- Frontend: React
+- Frontend: Next.js
 - Backend: FastAPI
 
 ## Cronograma:
-## Etapa 1: Planejamento & Estrutura (Abril-Maio)
+##Etapa 1: Planejamento & Estrutura (Abril-Maio)
 
 | Semanas | Atividades |
 |--------|-----------|
@@ -50,6 +50,3 @@
 | 09/11 - 23/11 | Testes unitários; Testes de integração |
 | 24/11 - 08/12 | Corrigir bugs; Refatorar; Otimizar performance |
 | 09/12 - 21/12 | Ajustes finais; Preparar produção|
-
-
-### Link para o Documento V01: https://docs.google.com/document/d/1U-aY2taIQOtJLpWy-2ADQsik5AfMI-u342KKN4aKbJI/edit?usp=sharing
