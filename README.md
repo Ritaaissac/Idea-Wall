@@ -53,5 +53,65 @@
 | 09/12 - 21/12 | Ajustes finais; Preparar produção|
 
 ## Cronograma de acordo com os requisitos funcionais:
+### Etapa 1: Módulo de Usuários (15/06 - 06/07)
+
+#### Requisitos
+- Cadastro de usuário
+- Login
+- Logout
+- Restrição de acesso para usuários não autenticados
+
+| Período | Frontend | Backend |
+|----------|----------|----------|
+| 15/06 - 26/06 | Tela de Cadastro e Login | API de Cadastro de Usuário |
+| 29/06 - 06/07 | Integração das telas com a API e proteção de páginas | Login, Logout e Autenticação JWT |
+
+### Etapa 2: Módulo de Tarefas (13/07 - 07/08)
+
+#### Requisitos
+- Criar tarefa
+- Editar tarefa
+- Excluir tarefa
+- Listar tarefas
+
+| Período | Frontend | Backend |
+|----------|----------|----------|
+| 13/07 - 24/07 | Formulário de criação e edição de tarefas | CRUD de tarefas |
+| 27/07 - 07/08 | Listagem e exclusão de tarefas | Validações e regras de negócio |
+
+### Etapa 3: Quadro Kanban (10/08 - 04/09)
+
+#### Requisitos
+- A Fazer
+- Em Andamento
+- Concluído
+- Status da tarefa
+
+| Período | Frontend | Backend |
+|----------|----------|----------|
+| 10/08 - 21/08 | Desenvolvimento das colunas Kanban | Implementação do campo Status |
+| 24/08 - 04/09 | Movimentação visual entre colunas | Atualização de status das tarefas |
+
+### Etapa 4: Integração Geral (07/09 - 02/10)
+
+| Período | Frontend | Backend |
+|----------|----------|----------|
+| 07/09 - 18/09 | Consumo da API e ajustes de interface | Ajustes dos endpoints |
+| 21/09 - 02/10 | Integração completa do sistema | Correções e validações finais |
+
+### Etapa 5: Testes e Correções (05/10 - 30/10)
+
+| Período | Frontend | Backend |
+|----------|----------|----------|
+| 05/10 - 16/10 | Testes de interface e responsividade | Testes unitários e integração |
+| 19/10 - 30/10 | Correção de bugs visuais | Correção de bugs e otimização |
+
+### Etapa 6: Documentação e Entrega (02/11 - 27/11)
+
+| Período | Atividades |
+|----------|------------|
+| 02/11 - 13/11 | Elaboração da documentação técnica |
+| 16/11 - 27/11 | Preparação da apresentação e versão final |
 
 - Link para o documento base do projeto 01: https://docs.google.com/document/d/1U-aY2taIQOtJLpWy-2ADQsik5AfMI-u342KKN4aKbJI/edit?usp=sharing
+- Link para o Trello: https://trello.com/invite/b/69d66a05856fdea27b487093/ATTId4593fe2b2b4d539f2278e03247da7f1A1054E60/idea-wall 
