@@ -33,6 +33,7 @@
 | 01/07 - 15/07 | Configurar frontend (Next.js) e formatação |
 | 16/07 - 31/07 | Configurar backend; Banco de dados; Variáveis de ambiente |
 
+
 ## Etapa 3: Desenvolvimento & Integração (Agosto-Setembro)
 
 | Semanas | Atividades |
@@ -50,5 +51,7 @@
 | 09/11 - 23/11 | Testes unitários; Testes de integração |
 | 24/11 - 08/12 | Corrigir bugs; Refatorar; Otimizar performance |
 | 09/12 - 21/12 | Ajustes finais; Preparar produção|
+
+## Cronograma de acordo com os requisitos funcionais:
 
 - Link para o documento base do projeto 01: https://docs.google.com/document/d/1U-aY2taIQOtJLpWy-2ADQsik5AfMI-u342KKN4aKbJI/edit?usp=sharing
