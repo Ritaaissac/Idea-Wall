@@ -1,0 +1,339 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    overflow-x:hidden;
+}
+
+.hero{
+
+    width:100%;
+    min-height:100vh;
+
+    display:flex;
+
+}
+
+
+/* ESQUERDA */
+
+.left{
+
+    width:45%;
+
+    background:#F5EE96;
+
+    clip-path: polygon(0 0, 78% 0, 100% 100%, 0 100%);
+
+    padding:70px;
+
+}
+
+
+.seta{
+
+    width:25px;
+
+    height:25px;
+
+    border-top:5px solid #8755F0;
+
+    border-left:5px solid #8755F0;
+
+    transform:rotate(-45deg);
+
+    margin-bottom:30px;
+
+}
+
+
+h1{
+
+    font-size:65px;
+
+    line-height:1;
+
+    font-family:Georgia, serif;
+
+}
+
+
+h1 span{
+
+    display:block;
+
+    color:#8755F0;
+
+    font-size:55px;
+
+    font-family:'Poppins',sans-serif;
+
+    font-weight:700;
+
+}
+
+
+p{
+
+    margin-top:25px;
+
+    width:450px;
+
+    font-size:18px;
+
+    color:#555;
+
+    line-height:1.5;
+
+}
+
+
+/* CARDS */
+
+.cards{
+
+    display:flex;
+
+    gap:55px;
+
+    margin-top:50px;
+
+}
+
+
+.card{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+}
+
+
+.icone{
+
+    width:90px;
+
+    height:90px;
+
+    border-radius:50%;
+
+    background:#F8F0C8;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    overflow:hidden;
+
+}
+
+
+/* AQUI ESTÁ A MUDANÇA */
+
+.icone img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:contain;
+
+    padding:20px;
+
+}
+
+
+.card span{
+
+    margin-top:12px;
+
+    font-size:18px;
+
+    font-weight:700;
+
+}
+
+
+/* BOTÃO */
+
+button{
+
+    margin-top:55px;
+
+    width:240px;
+
+    height:65px;
+
+    border:none;
+
+    border-radius:18px;
+
+    background:#8755F0;
+
+    color:white;
+
+    font-size:18px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+}
+
+
+
+
+/* DIREITA */
+
+.right{
+
+    width:55%;
+    display:flex;
+    
+    
+
+}
+
+
+.right img{
+
+    width:100%;
+    align-self:flex-end;
+
+
+
+}
+
+
+
+
+/* NOTEBOOK */
+
+@media(max-width:1366px){
+
+    h1{
+
+        font-size:52px;
+
+    }
+
+    h1 span{
+
+        font-size:45px;
+
+    }
+
+    p{
+
+        width:350px;
+
+        font-size:16px;
+
+    }
+
+    .cards{
+
+        gap:35px;
+
+    }
+
+}
+
+
+
+/* CELULAR */
+
+@media(max-width:768px){
+
+.hero{
+
+    flex-direction:column;
+
+}
+
+
+.left{
+
+    width:100%;
+
+    clip-path:none;
+
+    padding:40px 25px;
+
+}
+
+
+.right{
+
+    width:100%;
+
+    justify-content:center;
+
+    
+
+}
+
+h1{
+
+    font-size:42px;
+
+}
+
+
+h1 span{
+
+    font-size:34px;
+
+}
+
+
+p{
+
+    width:100%;
+
+    font-size:16px;
+
+}
+
+
+.cards{
+
+    justify-content:space-between;
+
+    gap:15px;
+
+}
+
+
+.icone{
+
+    width:70px;
+
+    height:70px;
+
+}
+
+
+.card span{
+
+    font-size:15px;
+
+}
+
+
+button{
+
+    width:100%;
+
+}
+
+}
