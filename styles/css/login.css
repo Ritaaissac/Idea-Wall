@@ -1,0 +1,181 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-family:'Poppins', sans-serif;
+
+    background: url("../img/fundo.png");
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+}
+
+.container{
+    width:900px;
+    height:520px;
+    display:flex;
+    background:#F5EE96;
+    border-radius:35px;
+    overflow:hidden;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+/* LADO ESQUERDO */
+
+.left{
+    width:55%;
+    background:#F5EE96;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    gap:10px;
+    padding:40px;
+}
+
+.left h1{
+    font-family:Georgia, serif;
+    font-size:60px;
+    line-height:.9;
+    text-align:center;
+}
+
+.left h1 span{
+    display:block;
+
+    font-family:'Poppins', sans-serif;
+    font-size:55px;
+    font-weight:700;
+
+    color:#8755F0;
+}
+
+.left img{
+    width:220px;
+    margin-top:10px;
+}
+
+.texto2{
+    font-size:18px;
+    text-align:left;
+    margin-top:10px;
+    position: relative;
+    left: 30px;
+    bottom: 10px;
+}
+
+/* LADO DIREITO */
+
+.right{
+    width:45%;
+
+    background:#8755F0;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    border-radius: 35px 35px 35px 35px ;
+}
+
+.form-box{
+    width:80%;
+}
+
+.input-group{
+    margin-bottom:22px;
+}
+
+.input-group input{
+    width:100%;
+    height:58px;
+
+    border:2px solid rgba(255,255,255,.7);
+    border-radius:30px;
+
+    background:transparent;
+    outline:none;
+    margin-top: 20px;
+
+    padding:0 25px;
+
+    color:white;
+    font-size:18px;
+}
+
+.input-group input::placeholder{
+    color:#F5EE96;
+}
+
+.cadastro{
+    text-align:right;
+    position: relative;
+    right: 20px;
+    bottom: 10px;
+    margin:0 0 30px;
+}
+
+.cadastro a{
+    color:white;
+    text-decoration:none;
+    font-size:13px;
+}
+
+.btn-login{
+    width:210px;
+    height:65px;
+
+    border:none;
+    border-radius:18px;
+
+    background:#E7D74A;
+
+    padding:0 25px;
+
+    color:white;
+    font-size:20px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    display:block;
+    margin:40px auto;
+    }
+
+.btn-login:hover{
+    opacity:.9;
+}
+
+.urso{
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    overflow:hidden;
+
+}
+
+.urso img{
+    width:450px;
+
+    object-fit:contain;
+
+    padding:20px;
+}

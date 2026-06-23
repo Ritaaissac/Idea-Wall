@@ -6,49 +6,25 @@
 
 body{
     font-family:'Poppins',sans-serif;
-    overflow-y:hidden;
+    overflow:hidden;
 }
 
 .hero{
-
     width:100%;
-    min-height:100vh;
-
+    height:100vh;
     display:flex;
-
 }
-
 
 /* ESQUERDA */
-
-.left{
-
-    width:75%;
-
+.area{
+    width:55%;
     background:#F5EE96;
-
     clip-path: polygon(0 0, 55% 0, 100% 100%, 0 100%);
-
-    padding:70px;
-
+    padding: 100px 100px 50px 50px;
 }
 
 
-.seta{
 
-    width:25px;
-
-    height:25px;
-
-    border-top:5px solid #8755F0;
-
-    border-left:5px solid #8755F0;
-
-    transform:rotate(-45deg);
-
-    margin-bottom:30px;
-
-}
 
 
 h1{
@@ -137,13 +113,9 @@ p{
 }
 
 
-/* AQUI ESTÁ A MUDANÇA */
-
 .icone img{
 
     width:100%;
-
-   
 
     object-fit:contain;
 
@@ -190,30 +162,30 @@ button{
 }
 
 
-
-
 /* DIREITA */
 
 .mesa{
-    width: 110vh;
+    width:45%;
+
     display:flex;
-    position: relative;
-    bottom: 150px;
-    
-    overflow: hidden;
 
+    justify-content:center;
+
+    align-items:flex-end;
+
+    overflow:visible;
 }
-
 
 .mesa img{
-    width:100%;
-}
+    width:900px;
 
-.right{
+    max-width:none;
 
-    width:55%;
-    display:flex;
-    
-    
+    z-index:1;
 
+    position:relative;
+
+    right:  100px;
+
+    top: 10px;
 }
