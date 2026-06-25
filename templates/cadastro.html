@@ -3,39 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Cadastro</title>
+
     <link rel="stylesheet" href="../styles/css/cadastro.css">
 </head>
+
 <body>
-    <div class="container">
+
+<div class="container">
 
     <div class="left">
+
         <h1>
             Faça o seu
-            <span>cadastro</span>
+            <span class="texto2">cadastro</span>
         </h1>
+
         <div class="urso">
             <img src="../styles/img/urso.png" alt="Urso">
         </div>
+
     </div>
 
     <div class="right">
 
-        <form class="form-box">
+        <form class="form-box" id="cadastroForm">
 
             <div class="input-group">
-                <input type="email" placeholder="Email">
+                <input
+                    id="email"
+                    type="email"
+                    placeholder="Email"
+                    required
+                >
             </div>
 
             <div class="input-group">
-                <input type="text" placeholder="Username">
+                <input
+                    id="nome"
+                    type="text"
+                    placeholder="Nome"
+                    required
+                >
             </div>
 
             <div class="input-group">
-                <input type="password" placeholder="Password">
+                <input
+                    id="senha"
+                    type="password"
+                    placeholder="Senha"
+                    required
+                >
             </div>
 
-            <button class="btn-cadastro" onclick="window.location.href='../templates/login.html'">
+            <button class="btn-cadastro" type="submit">
                 Cadastrar →
             </button>
 
@@ -44,5 +65,8 @@
     </div>
 
 </div>
+
+<script src="../static/js/cadastro.js"></script>
+
 </body>
 </html>

@@ -1,76 +1,95 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import APIRouter, HTTPException
 from passlib.context import CryptContext
-from jose import JWTError, jwt
+from jose import jwt
 from datetime import datetime, timedelta
-import os
 
-from database import get_session
-from models import Usuario
-from sqlmodel import Session
+from models.usuario import UsuarioCadastro, UsuarioLogin
+from database import conectar
 
-router = APIRouter(prefix="/auth", tags=["Auth"]) 
+router = APIRouter()
 
-SECRET_KEY = "minha-chave-super-secreta-123456"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+pwd_context = CryptContext(schemes=["bcrypt"])
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+SECRET_KEY = "IDEAWALL2026"
 
+@router.post("/cadastro")
+def cadastrar(usuario: UsuarioCadastro):
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    conn = conectar()
+    cursor = conn.cursor()
 
+    senha_hash = pwd_context.hash(usuario.senha)
 
-def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
-
-
-def authenticate_user(session: Session, email: str, password: str):
-    user = session.query(Usuario).filter(Usuario.email == email).first()
-    if not user:
-        return None
-    if not verify_password(password, user.senha):
-        return None
-    return user
-
-
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
-    to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
-
-
-def get_current_user(token: str = Depends(oauth2_scheme), session: Session = Depends(get_session)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str | None = payload.get("sub")
-        if email is None:
-            raise credentials_exception
-    except JWTError:
-        raise credentials_exception
 
-    user = session.query(Usuario).filter(Usuario.email == email).first()
-    if user is None:
-        raise credentials_exception
-    return user
+        cursor.execute(
+            """
+            INSERT INTO usuarios(nome,email,senha)
+            VALUES(?,?,?)
+            """,
+            (
+                usuario.nome,
+                usuario.email,
+                senha_hash
+            )
+        )
 
+        conn.commit()
 
-@router.post('/login')
-def login(form_data: OAuth2PasswordRequestForm = Depends(), session: Session = Depends(get_session)):
-    user = authenticate_user(session, form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(status_code=400, detail="Incorrect email or password")
-    access_token = create_access_token(data={"sub": user.email})
-    return {"access_token": access_token, "token_type": "bearer"}
+        return {
+            "mensagem":"Usuário cadastrado"
+        }
+
+    except:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Email já cadastrado"
+        )
+
+@router.post("/login")
+def login(usuario: UsuarioLogin):
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT email, senha
+        FROM usuarios
+        WHERE email = ?
+        """,
+        (usuario.email,)
+    )
+
+    resultado = cursor.fetchone()
+
+    if not resultado:
+        raise HTTPException(
+            status_code=401,
+            detail="Usuário não encontrado"
+        )
+
+    email, senha_hash = resultado
+
+    if not pwd_context.verify(
+        usuario.senha,
+        senha_hash
+    ):
+        raise HTTPException(
+            status_code=401,
+            detail="Senha inválida"
+        )
+
+    token = jwt.encode(
+        {
+            "sub": email,
+            "exp": datetime.utcnow() + timedelta(hours=2)
+        },
+        SECRET_KEY,
+        algorithm="HS256"
+    )
+
+    return {
+        "access_token": token
+    }

@@ -1,20 +1,21 @@
-from sqlmodel import SQLModel, create_engine, Session
-from sqlalchemy.orm import sessionmaker
-import os
+import sqlite3
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///database.db")
+def conectar():
+    return sqlite3.connect("usuarios.db")
 
-engine = create_engine(DATABASE_URL, echo=False)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=Session)
+def criar_tabela():
 
+    conn = conectar()
+    cursor = conn.cursor()
 
-def get_session():
-    session = SessionLocal()
-    try:
-        yield session
-    finally:
-        session.close()
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS usuarios(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT,
+        email TEXT UNIQUE,
+        senha TEXT
+    )
+    """)
 
-
-def init_db():
-    SQLModel.metadata.create_all(engine)
+    conn.commit()
+    conn.close()

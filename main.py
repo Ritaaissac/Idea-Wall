@@ -1,25 +1,19 @@
-
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
-
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-from routes.usuarios_router import router as usuarios_router
-from routes.quadros_router import router as quadros_router
-from routes.tarefas_router import router as tarefas_router
-from routes.categorias_router import router as categorias_router
-from routes.auth import router as auth_router
+from database import criar_tabela
+from routes.auth import router
 
 app = FastAPI()
 
-app.include_router(usuarios_router)
-app.include_router(quadros_router)
-app.include_router(tarefas_router)
-app.include_router(categorias_router)
-app.include_router(auth_router)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000)
+criar_tabela()
+
+app.include_router(router)

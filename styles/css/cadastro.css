@@ -166,3 +166,12 @@ body{
 
     padding:20px;
 }
+
+.texto2{
+    font-size:18px;
+    text-align:left;
+    margin-top:10px;
+    position: relative;
+    left: 20px;
+    bottom: 10px;
+}

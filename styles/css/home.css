@@ -16,6 +16,16 @@ body{
 }
 
 /* ESQUERDA */
+.simbolo{
+    width:60px;
+    display:flex;
+    position:relative;
+    right: 30px;
+    top: 50px;
+    margin-top: -30px;
+    
+}
+
 .area{
     width:55%;
     background:#F5EE96;
