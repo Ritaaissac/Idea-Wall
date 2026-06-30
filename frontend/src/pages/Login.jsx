@@ -13,9 +13,8 @@ export default function Login() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const response = await fetch(
-      "http://localhost:8000/login",
-      {
+    try {
+      const response = await fetch("http://localhost:8000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -24,18 +23,22 @@ export default function Login() {
           email,
           senha,
         }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // 🔑 Salva o token gerado pelo FastAPI
+        localStorage.setItem("token", data.access_token);
+        // ➡️ Redireciona para o painel protegido
+        navigate("/dashboard");
+      } else {
+        // Exibe a mensagem de erro vinda do seu backend (ex: "Senha inválida")
+        alert(data.detail || "Erro ao fazer login. Verifique suas credenciais.");
       }
-    );
-
-    const data = await response.json();
-
-    if (response.ok) {
-      localStorage.setItem(
-        "token",
-        data.access_token
-      );
-
-      navigate("/dashboard");
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      alert("Não foi possível conectar ao servidor.");
     }
   }
 
@@ -53,17 +56,14 @@ export default function Login() {
       </div>
 
       <div className="right">
-        <form
-          className="form-box"
-          onSubmit={handleSubmit}
-        >
+        <form className="form-box" onSubmit={handleSubmit}>
           <div className="input-group">
             <input
               type="email"
               placeholder="Email"
-              onChange={(e) =>
-                setEmail(e.target.value)
-              }
+              value={email} // Controlando o input
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
 
@@ -71,19 +71,17 @@ export default function Login() {
             <input
               type="password"
               placeholder="Senha"
-              onChange={(e) =>
-                setSenha(e.target.value)
-              }
+              value={senha} // Controlando o input
+              onChange={(e) => setSenha(e.target.value)}
+              required
             />
           </div>
 
           <div className="cadastro">
-            <Link to="/cadastro">
-              Ainda não está cadastrado?
-            </Link>
+            <Link to="/cadastro">Ainda não está cadastrado?</Link>
           </div>
 
-          <button className="btn-login">
+          <button type="submit" className="btn-login">
             Login →
           </button>
         </form>

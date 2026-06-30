@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -8,23 +8,37 @@ import Quadros from "./pages/Quadros";
 import CriarQuadro from "./pages/Criarquadro";
 import Perfil from "./pages/Perfil";
 
+import { ProtectedRoute } from "./ProtectedRoute";
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Rotas Públicas */}
         <Route path="/" element={<Home />} />
-
         <Route path="/login" element={<Login />} />
-
         <Route path="/cadastro" element={<Cadastro />} />
 
-        <Route path="/dashboard" element={<Dashboard />} />
+        {/* Rotas Privadas (Protegidas) */}
+        <Route 
+          path="/dashboard" 
+          element={<ProtectedRoute><Dashboard /></ProtectedRoute>} 
+        />
+        <Route 
+          path="/quadros" 
+          element={<ProtectedRoute><Quadros /></ProtectedRoute>} 
+        />
+        <Route 
+          path="/criar-quadro" 
+          element={<ProtectedRoute><CriarQuadro /></ProtectedRoute>} 
+        />
+        <Route 
+          path="/perfil" 
+          element={<ProtectedRoute><Perfil /></ProtectedRoute>} 
+        />
 
-        <Route path="/quadros" element={<Quadros />} />
-
-        <Route path="/criar-quadro" element={<CriarQuadro />} />
-
-        <Route path="/perfil" element={<Perfil />} />
+        {/* Rota de segurança: se digitar qualquer outra coisa, manda pro login */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
   );
