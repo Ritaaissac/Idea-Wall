@@ -103,8 +103,8 @@
 
 | Período | Frontend | Backend |
 |----------|----------|----------|
-| 05/10 - 16/10 | Testes de interface e responsividade | Testes unitários e integração |
-| 19/10 - 30/10 | Correção de bugs visuais | Correção de bugs e otimização |
+| 19/10 - 16/11 | Testes de interface e responsividade | Testes unitários e integração |
+| 17/11 - 24/11 | Correção de bugs visuais | Correção de bugs e otimização |
 
 ### Etapa 6: Documentação e Entrega (02/11 - 27/11)
 
