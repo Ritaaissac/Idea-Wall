@@ -1,3 +1,4 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/home.css";
 
@@ -42,7 +43,7 @@ export default function Home() {
           </div>
         </div>
 
-        <button onClick={() => navigate("/login")}>
+        <button onClick={() => navigate("/Cadastro")}>
           <b>Começar agora →</b>
         </button>
       </div>
