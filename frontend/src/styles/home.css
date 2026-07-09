@@ -37,13 +37,6 @@ html, body, #root, .hero {
     
 }
 
-.hero .simbolo {
-    width: 35px;
-    position: absolute;
-    top: 40px;
-    left: 60px;
-}
-
 .hero h1 {
     font-size: 42px;
     line-height: 1.1;
@@ -201,7 +194,7 @@ html, body, #root, .hero {
 @media (min-width: 1200px) {
 
     .hero .area {
-        width: 60%;
+        width: 65%;
         clip-path: polygon(0 0, 68% 0, 100% 100%, 0 100%);
         padding: 70px 120px 70px 70px;
 
@@ -211,12 +204,6 @@ html, body, #root, .hero {
         align-items: flex-start;
 
         gap: 28px;
-    }
-
-    .hero .simbolo {
-        width: 60px;
-        top: 185px;
-        left: 35px;
     }
 
     .hero h1 {

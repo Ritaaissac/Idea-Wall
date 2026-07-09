@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/home.css";
 
-import simbolo from "../assets/img/simbolo.png";
 import lampada from "../assets/img/lampada.png";
 import folha from "../assets/img/folha.png";
 import foguete from "../assets/img/foguete.png";
@@ -14,8 +13,6 @@ export default function Home() {
   return (
     <section className="hero">
       <div className="area">
-        <img src={simbolo} alt="" className="simbolo" />
-
         <h1>
           Bem vindo(a)
           <span> ao Idea Wall</span>
