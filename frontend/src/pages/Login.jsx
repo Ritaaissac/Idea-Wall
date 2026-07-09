@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import "../styles/login.css";
 import urso from "../assets/img/urso.png";
+import fundo from "../assets/img/fundo.png"
 
 export default function Login() {
   const navigate = useNavigate();
@@ -44,6 +45,8 @@ export default function Login() {
   }
 
   return (
+    <div className="pagina"
+        style={{ backgroundImage: `url(${fundo})` }}>
     <div className="container">
       <div className="left">
         <h1>
@@ -88,5 +91,6 @@ export default function Login() {
         </form>
       </div>
     </div>
+  </div>
   );
 }

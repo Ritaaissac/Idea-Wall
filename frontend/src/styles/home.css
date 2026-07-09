@@ -21,6 +21,7 @@ html, body, #root, .hero {
     height: 100vh;
     position: relative;
     overflow: hidden;
+    
 }
 
 .hero .area {
@@ -33,6 +34,7 @@ html, body, #root, .hero {
     flex-direction: column;
     justify-content: center;
     position: relative;
+    
 }
 
 .hero .simbolo {
@@ -49,7 +51,6 @@ html, body, #root, .hero {
     color: #111;
     font-weight: bold;
     position: relative;
-    margin-top: 40px;
     z-index: 1; 
 }
 
@@ -73,7 +74,6 @@ html, body, #root, .hero {
 }
 
 .hero p {
-    margin-top: 15px;
     max-width: 360px;
     font-size: 14px;
     color: #555;
@@ -83,7 +83,6 @@ html, body, #root, .hero {
 .hero .cards {
     display: flex;
     gap: 20px;
-    margin-top: 30px;
     max-width: 360px;
     justify-content: space-between; 
 }
@@ -102,25 +101,21 @@ html, body, #root, .hero {
 .hero .cards .card div {
     width: 80px;
     height: 80px;
-
     display: flex;
     justify-content: center;
     align-items: center;
-
-    background: #FFF(245, 238, 150, 0.7);
     border-radius: 50%;
-    
-    box-shadow: 0 8px 20px rgba(0,0,0,.08);
+    background: rgba(255, 255, 255, 0.5); 
+    box-shadow: 0 8px 20px rgba(0,0,0,.06);
 }
 
 
 .hero .cards .card img {
-    width: 60%;
+    width: 75%;
     height: auto;
     object-fit: contain;
-    
-
 } 
+
 
 .hero .cards .card span {
     margin-top: 10px;
@@ -130,7 +125,6 @@ html, body, #root, .hero {
 }
 
 .hero button {
-    margin-top: 35px;
     width: 210px;
     height: 50px;
     border: none;
@@ -205,72 +199,75 @@ html, body, #root, .hero {
 
 
 @media (min-width: 1200px) {
+
     .hero .area {
         width: 60%;
         clip-path: polygon(0 0, 68% 0, 100% 100%, 0 100%);
-        padding: 40px 120px 40px 70px;
+        padding: 70px 120px 70px 70px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+
+        gap: 28px;
     }
-    
+
     .hero .simbolo {
-        width: 80px;
-        top: 125px;
-        left: 28px;
+        width: 60px;
+        top: 185px;
+        left: 35px;
     }
 
     .hero h1 {
-        font-size: 100px;
-    }
-
-    .hero .area .detalhe, 
-    .hero .area img[src*="detalhe"], 
-    .hero .area .tracinhos { 
-        width: 45px;
-        top: -20px; 
-        left: -25px; 
+        font-size: 88px;
+        line-height: 1;
+        margin: 0;
     }
 
     .hero h1 span {
-        font-size: 90px;
-        margin-top: -20px;
+        font-size: 78px;
+        margin: 0;
     }
 
     .hero p {
+        margin: 0;
         font-size: 20px;
-        max-width: 600px;
-        margin-top: 30px;
+        max-width: 540px;
+        line-height: 1.45;
     }
 
     .hero .cards {
-        
-        max-width: 680px;
-        gap: 40px;
-        margin-top: 25px;
+        display: flex;
+        gap: 42px;
+        margin: 0;
     }
 
-    .hero .cards .card .icone, 
+    .hero .cards .card .icone,
     .hero .cards .card div {
-        width: 110px;
-        height: 110px;
-        
+        width: 95px;
+        height: 95px;
     }
 
     .hero .cards .card span {
+        margin-top: 12px;
         font-size: 18px;
     }
 
     .hero button {
-        margin-top: -20px;
-        width: 270px;
-        height: 70px;
-        font-size: 16px;
+        margin: 0;
+        width: 250px;
+        height: 65px;
+        font-size: 20px;
     }
 
     .hero .mesa {
-        width: 60%;
+        width: 58%;
     }
 
     .hero .mesa img {
-        object-fit: cover;
-        object-position: bottom left;
+        width: 100%;
+        object-fit: contain;
+        object-position: bottom right;
     }
 }

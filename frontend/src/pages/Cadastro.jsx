@@ -4,7 +4,8 @@ import { useNavigate, Link } from "react-router-dom"; // Importado o Link para n
 
 import "../styles/cadastro.css";
 import urso from "../assets/img/urso.png";
-import fundo from "../assets/img/fundo.png"
+import fundo from "../assets/img/fundo.png";
+
 
 export default function Cadastro() {
   const navigate = useNavigate();
@@ -43,6 +44,8 @@ export default function Cadastro() {
   }
 
   return (
+    <div className="pagina"
+      style={{ backgroundImage: `url(${fundo})` }}>
     <div className="container">
       <div className="left">
         <h1>
@@ -111,6 +114,7 @@ export default function Cadastro() {
           </button>
         </form>
       </div>
+    </div>
     </div>
   );
 }
