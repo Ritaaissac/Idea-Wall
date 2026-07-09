@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom"; // Importado o Link para n
 
 import "../styles/cadastro.css";
 import urso from "../assets/img/urso.png";
+import fundo from "../assets/img/fundo.png"
 
 export default function Cadastro() {
   const navigate = useNavigate();

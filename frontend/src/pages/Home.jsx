@@ -27,21 +27,29 @@ export default function Home() {
         </p>
 
         <div className="cards">
-          <div className="card">
-            <img src={lampada} alt="" />
-            <span>Inspire-se</span>
-          </div>
+          <div className="cards">
+              <div className="card">
+                <div className="icone">
+                  <img src={lampada} alt="" />
+                </div>
+                <span>Inspire-se</span>
+              </div>
 
-          <div className="card">
-            <img src={folha} alt="" />
-            <span>Organize</span>
-          </div>
+              <div className="card">
+                <div className="icone">
+                  <img src={folha} alt="" />
+                </div>
+                <span>Organize</span>
+              </div>
 
-          <div className="card">
-            <img src={foguete} alt="" />
-            <span>Realize</span>
+              <div className="card">
+                <div className="icone">
+                  <img src={foguete} alt="" />
+                </div>
+                <span>Realize</span>
+              </div>
+            </div>
           </div>
-        </div>
 
         <button onClick={() => navigate("/Cadastro")}>
           <b>Começar agora →</b>
