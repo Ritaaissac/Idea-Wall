@@ -14,18 +14,16 @@ SECRET_KEY = "IDEAWALL2026"
 
 @router.post("/cadastro")
 def cadastrar(usuario: UsuarioCadastro):
-
     conn = conectar()
     cursor = conn.cursor()
 
     senha_hash = pwd_context.hash(usuario.senha)
 
     try:
-
         cursor.execute(
             """
-            INSERT INTO usuarios(nome,email,senha)
-            VALUES(?,?,?)
+            INSERT INTO usuarios(nome, email, senha)
+            VALUES (%s, %s, %s)
             """,
             (
                 usuario.nome,
@@ -33,36 +31,38 @@ def cadastrar(usuario: UsuarioCadastro):
                 senha_hash
             )
         )
-
         conn.commit()
-
         return {
-            "mensagem":"Usuário cadastrado"
+            "mensagem": "Usuário cadastrado com sucesso"
         }
-
-    except:
-
+    except Exception as e:
         raise HTTPException(
             status_code=400,
-            detail="Email já cadastrado"
+            detail="Usuário já cadastrado ou erro na operação."
         )
+    finally:
+        cursor.close()
+        conn.close()
 
 @router.post("/login")
 def login(usuario: UsuarioLogin):
-
     conn = conectar()
     cursor = conn.cursor()
 
+   
     cursor.execute(
         """
         SELECT email, senha
         FROM usuarios
-        WHERE email = ?
+        WHERE email = %s
         """,
         (usuario.email,)
     )
 
     resultado = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
 
     if not resultado:
         raise HTTPException(
