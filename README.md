@@ -11,7 +11,7 @@
   A plataforma tem como objetivo central melhorar a produtividade individual e em equipe, oferecendo uma interface simples e responsiva, além de recursos que promovem a colaboração, como atribuição de tarefas, prazos, descrições detalhadas e atualizações em tempo real.
 
 ## Tecnologias:
-- Frontend: Next.js
+- Frontend: React
 - Backend: FastAPI
 
 ## Cronograma:
