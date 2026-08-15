@@ -9,48 +9,6 @@ body,
 #root {
   min-height: 100%;
   margin: 0;
-}/* LOGO COM IMAGEM */
-.cq-logo-btn {
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  margin: 4px 0 25px;
-  display: flex;
-  justify-content: center;
-}
-
-.cq-logo-img {
-  width: 120px;
-  height: auto;
-  object-fit: contain;
-}
-
-/* AVATAR DENTRO DA SIDEBAR */
-.cq-avatar {
-  width: 65px;
-  height: 65px;
-  border-radius: 50%;
-  overflow: hidden;
-  background: #fff37c;
-  border: 3px solid rgba(255, 255, 255, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 25px;
-  cursor: pointer;
-}
-
-.cq-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* ÍCONE DE IMAGEM DENTRO DO BOTÃO DA SIDEBAR */
-.cq-img-icon {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
 }
 
 body {
@@ -80,16 +38,19 @@ input {
 }
 
 /* =========================================================
-   SIDEBAR
+   SIDEBAR (ALINHADA À ALTURA DO CARD)
    ========================================================= */
 
 .cq-sidebar {
   position: fixed;
-  inset: 34px auto 27px 21px;
+  top: 40px;
+  bottom: 40px;
+  left: 21px;
 
   z-index: 10;
 
   width: 185px;
+  height: calc(100vh - 80px);
 
   border-radius: 27px;
 
@@ -103,67 +64,54 @@ input {
   flex-direction: column;
   align-items: center;
 
-  padding: 22px 14px 25px;
+  padding: 24px 14px 28px;
 
   color: #fff;
 }
 
 /* LOGO */
 
-.cq-logo {
+.cq-logo-btn {
   border: 0;
   background: transparent;
-
-  color: #fff27b;
-
   cursor: pointer;
-
+  margin: 4px 0 20px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  font-family: Georgia, serif;
-  font-weight: 800;
-
-  font-size: 40px;
-  line-height: 0.78;
-
-  letter-spacing: -2px;
-
-  margin: 4px 0 42px;
+  justify-content: center;
 }
 
-.cq-logo span:last-child {
-  margin-left: 18px;
+.cq-logo-img {
+  width: 120px;
+  height: auto;
+  object-fit: contain;
 }
 
-/* AVATAR */
+/* AVATAR DO USUÁRIO (MAIOR) */
 
 .cq-avatar {
-  width: 63px;
-  height: 63px;
+  width: 95px;
+  height: 95px;
 
   border-radius: 50%;
   overflow: hidden;
 
-  background: #fff277;
+  background: #fff37c;
 
-  border: 3px solid rgba(
+  border: 4px solid rgba(
     255,
     255,
     255,
-    0.35
+    0.4
   );
 
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  color: #7f5be9;
+  margin-bottom: 25px;
 
-  font-size: 25px;
-  font-weight: 800;
-
-  margin-bottom: 20px;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
 .cq-avatar img {
@@ -173,7 +121,7 @@ input {
   object-fit: cover;
 }
 
-/* MENU */
+/* MENU (SEM ÍCONES) */
 
 .cq-menu {
   width: 100%;
@@ -204,13 +152,12 @@ input {
 
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-
-  gap: 9px;
+  justify-content: center;
 
   cursor: pointer;
 
   font-size: 14px;
+  font-weight: 600;
 
   transition: 0.2s ease;
 }
@@ -221,13 +168,10 @@ input {
   color: #8755ef;
 }
 
-.cq-menu-icon {
-  width: 20px;
-
-  text-align: center;
-
-  font-size: 19px;
-  line-height: 1;
+/* REMOVENDO ÍCONES DO MENU */
+.cq-menu-icon,
+.cq-img-icon {
+  display: none !important;
 }
 
 /* LOGOUT */
@@ -704,7 +648,7 @@ input {
 }
 
 /* =========================================================
-   MASCOTE (MAIS PARA BAIXO E PARA A DIREITA)
+   MASCOTE (POSICIONADO MAIS ABAIXO E À DIREITA)
    ========================================================= */
 
 .cq-bear {
@@ -836,6 +780,7 @@ input {
     inset: auto;
 
     width: calc(100% - 28px);
+    height: auto;
 
     margin: 14px;
 
