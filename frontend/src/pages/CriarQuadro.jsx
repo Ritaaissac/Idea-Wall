@@ -5,7 +5,7 @@ import "../styles/criarquadro.css";
 import urso from "../assets/img/urso4.png";
 import fundo from "../assets/img/fundo.png";
 
-// Import das novas imagens do menu
+// Import das imagens do menu
 import logoImg from "../assets/img/logo.png";
 import iconeMais from "../assets/img/iconemais.png";
 import usuarioPadrao from "../assets/img/usuario.png";
@@ -133,10 +133,11 @@ export default function CriarQuadro() {
 
   function handleLogout() {
     localStorage.removeItem("usuario");
+    localStorage.removeItem("token");
     navigate("/login");
   }
 
-  function handleCreate(event) {
+  async function handleCreate(event) {
     event.preventDefault();
 
     if (!titulo.trim()) {
@@ -144,29 +145,49 @@ export default function CriarQuadro() {
       return;
     }
 
+    // 1. Busca o token no localStorage
+    let token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Nenhum token de autenticação encontrado. Faça login novamente.");
+      return;
+    }
+
+    // Limpa aspas duplas ou espaços que possam ter vindo do localStorage
+    token = token.replace(/^"+|"+$/g, '').trim();
+
     setSaving(true);
 
-    const novoQuadro = {
-      id: crypto?.randomUUID?.() || `${Date.now()}`,
-      titulo: titulo.trim(),
-      descricao: descricao.trim(),
-      icone: selectedIcon.id,
-      criadoEm: new Date().toISOString(),
-    };
+    try {
+      // 2. Faz a chamada POST para o backend em FastAPI
+      const response = await fetch("http://127.0.0.1:8000/quadros", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          titulo: titulo.trim(),
+          descricao: descricao.trim(),
+          icone: selectedIcon.id,
+        }),
+      });
 
-    const quadrosSalvos = JSON.parse(
-      localStorage.getItem("quadros") || "[]"
-    );
-
-    localStorage.setItem(
-      "quadros",
-      JSON.stringify([...quadrosSalvos, novoQuadro])
-    );
-
-    setTimeout(() => {
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Sucesso ao salvar no MySQL:", data);
+        alert("Quadro criado com sucesso!");
+        navigate("/quadros");
+      } else {
+        const errorData = await response.json();
+        alert(`Erro ao criar quadro: ${errorData.detail || "Falha na requisição"}`);
+      }
+    } catch (error) {
+      console.error("Erro na conexão com o servidor:", error);
+      alert("Erro ao conectar com o servidor backend.");
+    } finally {
       setSaving(false);
-      navigate("/quadros");
-    }, 250);
+    }
   }
 
   return (

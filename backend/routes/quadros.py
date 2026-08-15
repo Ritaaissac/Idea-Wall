@@ -1,5 +1,5 @@
-from fastapi import APIRouter, HTTPException, Header
-from typing import Optional
+from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import jwt, JWTError
 
 from models.quadro import QuadroCriar
@@ -8,41 +8,50 @@ from routes.auth import SECRET_KEY
 
 router = APIRouter(prefix="/quadros", tags=["Quadros"])
 
-def obter_usuario_logado(authorization: Optional[str]):
-    if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Token de autenticação não fornecido.")
-    token = authorization.split(" ")[1]
+security = HTTPBearer()
+
+def obter_usuario_logado(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-        return payload.get("sub")
+        email = payload.get("sub")
+        if not email:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token inválido: payload sem identificação."
+            )
+        return email
     except JWTError:
-        raise HTTPException(status_code=401, detail="Token inválido ou expirado.")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token inválido ou expirado."
+        )
 
 @router.post("")
-def criar_quadro(quadro: QuadroCriar, authorization: Optional[str] = Header(None)):
-    email_usuario = obter_usuario_logado(authorization)
-    
+def criar_quadro(
+    quadro: QuadroCriar,
+    email_usuario: str = Depends(obter_usuario_logado)
+):
     conn = conectar()
     cursor = conn.cursor()
 
     try:
-        # Garante que a tabela de quadros exista
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS quadros (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                titulo VARCHAR(255) NOT NULL,
-                descricao TEXT,
-                icone VARCHAR(50),
-                usuario_email VARCHAR(255)
-            )
-        """)
+        # 1. Busca o ID do usuário através do e-mail extraído do token
+        cursor.execute("SELECT id FROM usuarios WHERE email = %s", (email_usuario,))
+        usuario = cursor.fetchone()
 
+        if not usuario:
+            raise HTTPException(status_code=404, detail="Usuário não encontrado.")
+
+        usuario_id = usuario["id"]
+
+        # 2. Insere o quadro utilizando o usuario_id
         cursor.execute(
             """
-            INSERT INTO quadros (titulo, descricao, icone, usuario_email)
+            INSERT INTO quadros (titulo, descricao, icone, usuario_id)
             VALUES (%s, %s, %s, %s)
             """,
-            (quadro.titulo, quadro.descricao, quadro.icone, email_usuario)
+            (quadro.titulo, quadro.descricao, quadro.icone, usuario_id)
         )
         conn.commit()
         return {"mensagem": "Quadro criado com sucesso!"}

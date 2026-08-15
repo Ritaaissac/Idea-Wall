@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from database import criar_tabela
+from database import criar_tabelas
 from routes.auth import router as auth_router
 from routes.quadros import router as quadros_router
 
@@ -17,7 +17,7 @@ app.add_middleware(
 )
 
 # Inicializa as tabelas do banco de dados ao iniciar
-criar_tabela()
+criar_tabelas()
 
 # Registra as rotas de autenticação e quadros
 app.include_router(auth_router)

@@ -49,7 +49,6 @@ def login(usuario: UsuarioLogin):
     conn = conectar()
     cursor = conn.cursor()
 
-   
     cursor.execute(
         """
         SELECT email, senha
@@ -70,7 +69,9 @@ def login(usuario: UsuarioLogin):
             detail="Usuário não encontrado"
         )
 
-    email, senha_hash = resultado
+    # Acesso corrigido para DictCursor
+    email = resultado["email"]
+    senha_hash = resultado["senha"]
 
     if not pwd_context.verify(
         usuario.senha,
