@@ -2,11 +2,14 @@ import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/criarquadro.css";
 
-import urso from "../assets/img/urso3.png";
+import urso from "../assets/img/urso4.png";
 import fundo from "../assets/img/fundo.png";
 
-// Ícones disponíveis para os tipos de quadro:
-// frontend/src/assets/img/quadros/
+// Import das novas imagens do menu
+import logoImg from "../assets/img/logo.png";
+import iconeMais from "../assets/img/iconemais.png";
+import usuarioPadrao from "../assets/img/usuario.png";
+
 const ICONS = [
   {
     id: "escola",
@@ -176,29 +179,24 @@ export default function CriarQuadro() {
 
         <button
           type="button"
-          className="cq-logo"
+          className="cq-logo-btn"
           onClick={() => navigate("/quadros")}
           aria-label="Ir para Quadros"
         >
-          <span>Idea</span>
-          <span>Wall</span>
+          <img src={logoImg} alt="Idea Wall" className="cq-logo-img" />
         </button>
 
-        <div className="cq-avatar">
+        <div className="cq-avatar" onClick={() => navigate("/perfil")}>
           {(() => {
             const usuario = JSON.parse(
               localStorage.getItem("usuario") || "null"
             );
 
-            return usuario?.foto ? (
+            return (
               <img
-                src={usuario.foto}
+                src={usuario?.foto || usuarioPadrao}
                 alt="Foto do usuário"
               />
-            ) : (
-              <span>
-                {usuario?.nome?.charAt(0)?.toUpperCase() || "U"}
-              </span>
             );
           })()}
         </div>
@@ -220,7 +218,7 @@ export default function CriarQuadro() {
             className="active"
             aria-current="page"
           >
-            <span className="cq-menu-icon">＋</span>
+            <img src={iconeMais} alt="" className="cq-img-icon" />
             <span>Criar quadro</span>
           </button>
         </nav>
@@ -230,8 +228,8 @@ export default function CriarQuadro() {
           className="cq-logout"
           onClick={handleLogout}
         >
-          <span>↪</span>
-          Logout
+          <span className="cq-logout-icon">↪</span>
+          <span>Logout</span>
         </button>
 
       </aside>
@@ -246,8 +244,6 @@ export default function CriarQuadro() {
 
           {/* TÍTULO */}
           <div className="cq-heading">
-
-           
 
             <h1 id="titulo-pagina">
               Crie o seu
