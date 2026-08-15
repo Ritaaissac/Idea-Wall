@@ -1,0 +1,838 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+/* =========================================================
+   PÁGINA
+   ========================================================= */
+
+.criar-quadro-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  gap: 0;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: repeat;
+
+  color: #111;
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.cq-sidebar {
+  position: fixed;
+  inset: 34px auto 27px 21px;
+
+  z-index: 10;
+
+  width: 185px;
+
+  border-radius: 27px;
+
+  background: linear-gradient(
+    180deg,
+    #a58af9 0%,
+    #8555ef 100%
+  );
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 22px 14px 25px;
+
+  color: #fff;
+}
+
+/* LOGO */
+
+.cq-logo {
+  border: 0;
+  background: transparent;
+
+  color: #fff27b;
+
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  font-family: Georgia, serif;
+  font-weight: 800;
+
+  font-size: 40px;
+  line-height: 0.78;
+
+  letter-spacing: -2px;
+
+  margin: 4px 0 42px;
+}
+
+.cq-logo span:last-child {
+  margin-left: 18px;
+}
+
+/* AVATAR */
+
+.cq-avatar {
+  width: 63px;
+  height: 63px;
+
+  border-radius: 50%;
+  overflow: hidden;
+
+  background: #fff277;
+
+  border: 3px solid rgba(
+    255,
+    255,
+    255,
+    0.35
+  );
+
+  display: grid;
+  place-items: center;
+
+  color: #7f5be9;
+
+  font-size: 25px;
+  font-weight: 800;
+
+  margin-bottom: 20px;
+}
+
+.cq-avatar img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+/* MENU */
+
+.cq-menu {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+.cq-menu button {
+  width: 100%;
+  min-height: 50px;
+
+  padding: 7px 14px;
+
+  border: 0;
+  border-radius: 25px;
+
+  background: rgba(
+    122,
+    75,
+    227,
+    0.36
+  );
+
+  color: #fff;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  gap: 9px;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+  transition: 0.2s ease;
+}
+
+.cq-menu button:hover,
+.cq-menu button.active {
+  background: #fff37c;
+  color: #8755ef;
+}
+
+.cq-menu-icon {
+  width: 20px;
+
+  text-align: center;
+
+  font-size: 19px;
+  line-height: 1;
+}
+
+/* LOGOUT */
+
+.cq-logout {
+  margin-top: auto;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #fff;
+
+  cursor: pointer;
+
+  font-size: 16px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+}
+
+/* =========================================================
+   CONTEÚDO PRINCIPAL
+   ========================================================= */
+
+.cq-main {
+  width: 100%;
+  min-height: 100vh;
+
+  margin-left: 207px;
+
+  padding: 40px 5vw;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* =========================================================
+   CARD PRINCIPAL
+   ========================================================= */
+
+.cq-card {
+  position: relative;
+
+  width: min(
+    1050px,
+    calc(100vw - 300px)
+  );
+
+  min-height: 690px;
+
+  overflow: visible;
+
+  border-radius: 28px;
+
+  background: #fff391;
+
+  box-shadow:
+    0 12px 35px rgba(
+      73,
+      45,
+      144,
+      0.08
+    );
+
+  padding: 48px 100px 60px;
+}
+
+/* =========================================================
+   TÍTULO
+   ========================================================= */
+
+.cq-heading {
+  position: relative;
+
+  width: max-content;
+
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+.cq-heading > :not(h1) {
+  display: none !important;
+}
+
+.cq-heading h1 {
+  margin: 0;
+
+  font-family: Georgia, serif;
+
+  font-size: clamp(
+    58px,
+    5vw,
+    78px
+  );
+
+  line-height: 0.95;
+
+  letter-spacing: -2px;
+}
+
+.cq-heading h1 span {
+  display: block;
+
+  color: #8755f0;
+
+  font-family: "Poppins", sans-serif;
+
+  font-size: 0.72em;
+
+  font-weight: 800;
+
+  letter-spacing: -1px;
+
+  margin-left: 45px;
+}
+
+/* =========================================================
+   FORMULÁRIO (CAMPOS & BOTÃO AUMENTADOS)
+   ========================================================= */
+
+.cq-form {
+  width: 380px;
+
+  margin: 28px auto 0;
+
+  position: relative;
+
+  z-index: 3;
+}
+
+.cq-form input {
+  width: 100%;
+  height: 54px;
+
+  border: 2px solid #8755f0;
+
+  border-radius: 12px;
+
+  outline: none;
+
+  background: rgba(
+    255,
+    255,
+    255,
+    0.04
+  );
+
+  color: #5f43c7;
+
+  padding: 0 16px;
+
+  margin-bottom: 24px;
+
+  font-size: 16px;
+
+  font-weight: 500;
+}
+
+.cq-form input::placeholder {
+  color: #8755f0;
+
+  opacity: 0.78;
+}
+
+.cq-form input:focus {
+  box-shadow:
+    0 0 0 3px
+    rgba(
+      135,
+      85,
+      240,
+      0.13
+    );
+}
+
+/* BOTÃO CRIAR AUMENTADO */
+
+.cq-create {
+  display: block;
+
+  width: 175px;
+  height: 54px;
+
+  margin: 8px auto 0;
+
+  border: 0;
+
+  border-radius: 12px;
+
+  background: #8755f0;
+
+  color: #fff;
+
+  cursor: pointer;
+
+  font-size: 18px;
+
+  font-weight: 700;
+
+  box-shadow: 0 4px 14px rgba(135, 85, 240, 0.3);
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.cq-create:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(135, 85, 240, 0.4);
+}
+
+.cq-create:disabled {
+  opacity: 0.65;
+
+  cursor: wait;
+}
+
+/* =========================================================
+   ÍCONE SELECIONADO & FRASE (SUBIDOS)
+   ========================================================= */
+
+.cq-icon-area {
+  position: absolute;
+
+  left: 50%;
+
+  bottom: 100px;
+
+  transform: translateX(-50%);
+
+  z-index: 5;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+}
+
+.cq-icon-preview {
+  position: relative;
+
+  width: 105px;
+
+  height: 105px;
+
+  border: 0;
+
+  border-radius: 12px;
+
+  background: #8755f0;
+
+  color: #fff;
+
+  display: grid;
+
+  place-items: center;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 6px 15px
+    rgba(
+      135,
+      85,
+      240,
+      0.20
+    );
+}
+
+.cq-preview-art {
+  display: grid;
+
+  place-items: center;
+}
+
+.cq-preview-art svg {
+  width: 62px;
+
+  height: 62px;
+}
+
+/* BOTÃO DE EDITAR NO ÍCONE */
+
+.cq-edit-icon {
+  position: absolute;
+
+  right: -8px;
+
+  bottom: -8px;
+
+  width: 30px;
+
+  height: 30px;
+
+  border-radius: 50%;
+
+  border: 2px solid #fff;
+
+  background: #fff;
+
+  color: #8755f0;
+
+  display: grid;
+
+  place-items: center;
+
+  font-size: 15px;
+
+  box-shadow:
+    0 2px 7px
+    rgba(
+      0,
+      0,
+      0,
+      0.12
+    );
+}
+
+/* TEXTO ABAIXO DO ÍCONE */
+
+.cq-icon-hint {
+  position: relative;
+
+  top: auto;
+
+  left: auto;
+
+  transform: none;
+
+  margin-top: 10px;
+
+  width: max-content;
+
+  color: #8755f0;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  text-align: center;
+}
+
+/* =========================================================
+   SELETOR DE ÍCONES
+   ========================================================= */
+
+.cq-picker {
+  position: absolute;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  bottom: 125px;
+
+  width: 285px;
+
+  padding: 13px;
+
+  border-radius: 17px;
+
+  background: #fff;
+
+  border:
+    2px solid
+    rgba(
+      135,
+      85,
+      240,
+      0.18
+    );
+
+  box-shadow:
+    0 14px 30px
+    rgba(
+      71,
+      41,
+      144,
+      0.18
+    );
+}
+
+.cq-picker-title {
+  color: #8755f0;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  margin: 0 0 10px 3px;
+}
+
+.cq-options {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 8px;
+}
+
+.icon-option {
+  min-height: 92px;
+
+  border:
+    1.5px solid
+    #e5dcff;
+
+  border-radius: 12px;
+
+  background: #fff;
+
+  color: #6845d3;
+
+  cursor: pointer;
+
+  padding: 7px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 4px;
+}
+
+.icon-option:hover,
+.icon-option.selected {
+  border-color: #8755f0;
+
+  background: #f2edff;
+}
+
+.icon-option-art {
+  width: 42px;
+
+  height: 42px;
+
+  display: grid;
+
+  place-items: center;
+}
+
+.icon-option-art img {
+  max-width: 100%;
+
+  max-height: 100%;
+
+  object-fit: contain;
+}
+
+.icon-option-art svg {
+  width: 42px;
+
+  height: 42px;
+}
+
+.icon-option > span:last-child {
+  font-size: 9px;
+
+  line-height: 1.15;
+
+  text-align: center;
+}
+
+/* =========================================================
+   MASCOTE (MAIS PARA BAIXO E PARA A DIREITA)
+   ========================================================= */
+
+.cq-bear {
+  position: absolute;
+
+  right: 25px;
+
+  bottom: -20px;
+
+  width: 720px;
+
+  max-height: 530px;
+
+  object-fit: contain;
+
+  object-position: bottom right;
+
+  pointer-events: none;
+
+  z-index: 2;
+}
+
+/* =========================================================
+   ACESSIBILIDADE & RESPONSIVO
+   ========================================================= */
+
+.sr-only {
+  position: absolute;
+
+  width: 1px;
+
+  height: 1px;
+
+  padding: 0;
+
+  margin: -1px;
+
+  overflow: hidden;
+
+  clip: rect(
+    0,
+    0,
+    0,
+    0
+  );
+
+  white-space: nowrap;
+
+  border: 0;
+}
+
+@media (max-width: 1100px) {
+
+  .cq-sidebar {
+    width: 165px;
+
+    left: 18px;
+  }
+
+  .cq-main {
+    margin-left: 190px;
+
+    padding: 30px 30px;
+  }
+
+  .cq-card {
+    width: min(900px, calc(100vw - 240px));
+
+    min-height: 620px;
+
+    padding: 45px 70px 55px;
+  }
+
+  .cq-form {
+    width: 310px;
+  }
+
+  .cq-bear {
+    width: 480px;
+
+    right: 10px;
+
+    bottom: -10px;
+  }
+}
+
+@media (max-width: 900px) {
+
+  .cq-sidebar {
+    width: 140px;
+
+    left: 14px;
+  }
+
+  .cq-main {
+    margin-left: 155px;
+
+    padding: 30px 25px;
+  }
+
+  .cq-card {
+    width: min(650px, calc(100vw - 190px));
+
+    min-height: 600px;
+  }
+
+  .cq-form {
+    width: 280px;
+  }
+
+  .cq-bear {
+    width: 380px;
+
+    right: 5px;
+
+    bottom: 0px;
+  }
+}
+
+@media (max-width: 680px) {
+
+  .criar-quadro-page {
+    display: block;
+  }
+
+  .cq-sidebar {
+    position: relative;
+
+    inset: auto;
+
+    width: calc(100% - 28px);
+
+    margin: 14px;
+
+    padding: 12px 16px;
+
+    border-radius: 20px;
+
+    flex-direction: row;
+  }
+
+  .cq-main {
+    margin: 0;
+
+    min-height: calc(100vh - 90px);
+
+    padding: 15px;
+  }
+
+  .cq-card {
+    width: 100%;
+
+    min-height: 570px;
+
+    padding: 35px 20px;
+  }
+
+  .cq-form {
+    width: min(280px, 80vw);
+  }
+
+  .cq-icon-area {
+    bottom: 60px;
+  }
+
+  .cq-bear {
+    right: -5px;
+
+    bottom: 3px;
+
+    width: 220px;
+  }
+}
