@@ -32,8 +32,10 @@ export default function Login() {
       if (response.ok) {
         // 🔑 Salva o token gerado pelo FastAPI
         localStorage.setItem("token", data.access_token);
+        // 👤 Salva os dados do usuário
+        localStorage.setItem("usuario", JSON.stringify(data.usuario));
         // ➡️ Redireciona para o painel protegido
-        navigate("/dashboard");
+        navigate("/perfil");
       } else {
         // Exibe a mensagem de erro vinda do seu backend (ex: "Senha inválida")
         alert(data.detail || "Erro ao fazer login. Verifique suas credenciais.");
@@ -81,13 +83,13 @@ export default function Login() {
             />
           </div>
 
-          <div className="cadastro">
-            <Link to="/cadastro">Ainda não está cadastrado?</Link>
-          </div>
-
           <button type="submit" className="btn-login">
             Login →
           </button>
+
+          <div className="cadastro">
+            <Link to="/cadastro">Ainda não está cadastrado?</Link>
+          </div>
         </form>
       </div>
     </div>
