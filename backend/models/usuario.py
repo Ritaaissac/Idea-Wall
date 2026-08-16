@@ -8,3 +8,8 @@ class UsuarioCadastro(BaseModel):
 class UsuarioLogin(BaseModel):
     email: str
     senha: str
+
+class AlterarSenha(BaseModel):
+    email: str
+    senha_atual: str
+    nova_senha: str
