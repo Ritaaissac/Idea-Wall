@@ -12,6 +12,7 @@ pwd_context = CryptContext(schemes=["bcrypt"])
 
 SECRET_KEY = "IDEAWALL2026"
 
+
 @router.post("/cadastro")
 def cadastrar(usuario: UsuarioCadastro):
     conn = conectar()
@@ -31,18 +32,23 @@ def cadastrar(usuario: UsuarioCadastro):
                 senha_hash
             )
         )
+
         conn.commit()
+
         return {
             "mensagem": "Usuário cadastrado com sucesso"
         }
-    except Exception as e:
+
+    except Exception:
         raise HTTPException(
             status_code=400,
             detail="Usuário já cadastrado ou erro na operação."
         )
+
     finally:
         cursor.close()
         conn.close()
+
 
 @router.post("/login")
 def login(usuario: UsuarioLogin):
