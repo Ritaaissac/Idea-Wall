@@ -1,13 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from database import criar_tabelas
 from routes.auth import router as auth_router
 from routes.quadros import router as quadros_router
 
 app = FastAPI()
 
-# Configuração do CORS para permitir comunicação com o React/Vite
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -16,9 +14,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Inicializa as tabelas do banco de dados ao iniciar
-criar_tabelas()
-
-# Registra as rotas de autenticação e quadros
 app.include_router(auth_router)
 app.include_router(quadros_router)
