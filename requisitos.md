@@ -1,4 +1,6 @@
-# Requisitos Funcionais Idea Wall
+# Requisitos Idea Wall
+
+# Requisitos Funcionais
 
 
 ### RF01 - Cadastrar Usuário
@@ -161,6 +163,54 @@ O usuário deve estar autenticado.
 
 **Pós-condição:**
 Após o encerramento da sessão, o usuário deve ser redirecionado para uma página pública, preferencialmente a página de login.
+
+# Requisitos não funcionais
+
+### RNF01 - Segurança
+
+**Descrição:** 
+O sistema deve proteger os dados dos usuários, especialmente suas senhas, que não devem ser armazenadas em texto simples.
+
+---
+
+### RNF02 - Usabilidade
+
+**Descrição:**
+O sistema deve possuir uma interface simples, intuitiva e de fácil utilização.
+
+---
+
+### RNF03 - Desempenho
+
+**Descrição:**
+O sistema deve apresentar tempo de resposta adequado durante a utilização de suas funcionalidades.
+
+---
+
+### RNF04 - Compatibilidade
+
+**Descrição:**
+O sistema deve funcionar corretamente nos principais navegadores, como Google Chrome, Microsoft Edge e Mozilla Firefox.
+
+---
+
+### RNF05 - Responsividade
+
+**Descrição:**
+O sistema deve adaptar sua interface a diferentes tamanhos de tela, permitindo o uso em computadores e dispositivos móveis.
+
+---
+
+### RNF06 - Integridade de dados
+
+**Descrição:**
+O sistema deve garantir que os dados cadastrados sejam armazenados corretamente, mantendo a associação entre usuários, quadros e tarefas.
+
+
+
+
+
+
 
 
 
