@@ -155,7 +155,7 @@ export default function Perfil() {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/alterar-senha",
+        "http://127.0.0.1:8000/alterar-senha",
         {
           method: "PUT",
           headers: {

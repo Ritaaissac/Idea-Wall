@@ -220,11 +220,13 @@ input {
   position: relative;
 
   width: min(
-    1050px,
+    950px,
     calc(100vw - 300px)
   );
 
-  min-height: 690px;
+  height: 680px;
+
+  
 
   overflow: visible;
 
@@ -656,7 +658,7 @@ input {
 
   right: 25px;
 
-  bottom: -20px;
+  bottom: -50px;
 
   width: 720px;
 

@@ -57,8 +57,8 @@ def login(usuario: UsuarioLogin):
 
     cursor.execute(
         """
-        SELECT email, senha
-        FROM usuarios
+        SELECT nome, email, senha, foto
+        FROM usuarios   
         WHERE email = %s
         """,
         (usuario.email,)
@@ -98,5 +98,10 @@ def login(usuario: UsuarioLogin):
     )
 
     return {
-        "access_token": token
+        "access_token": token,
+        "usuario": {
+            "nome": resultado["nome"],
+            "email": email,
+            "foto": resultado.get("foto"),
+        },
     }
