@@ -166,7 +166,7 @@ Após o encerramento da sessão, o usuário deve ser redirecionado para uma pág
 
 ---
 
-### RF09 — Alterar senha
+### RF09 - Alterar senha
 
 **Descrição**
  O sistema deve permitir que usuários autenticados alterem sua senha de acesso exclusivamente por meio da página de perfil.
