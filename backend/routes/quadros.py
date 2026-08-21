@@ -60,3 +60,60 @@ def criar_quadro(
     finally:
         cursor.close()
         conn.close()
+
+@router.get("")
+def listar_quadros(
+    email_usuario: str = Depends(obter_usuario_logado)
+):
+    conn = conectar()
+    cursor = conn.cursor()
+
+    try:
+        # Busca o usuário pelo e-mail do token
+        cursor.execute(
+            "SELECT id FROM usuarios WHERE email = %s",
+            (email_usuario,)
+        )
+
+        usuario = cursor.fetchone()
+
+        if not usuario:
+            raise HTTPException(
+                status_code=404,
+                detail="Usuário não encontrado."
+            )
+
+        usuario_id = usuario["id"]
+
+        # Busca somente os quadros desse usuário
+        cursor.execute(
+            """
+            SELECT
+                id,
+                titulo,
+                descricao,
+                icone,
+                criado_em
+            FROM quadros
+            WHERE usuario_id = %s
+            ORDER BY id DESC
+            """,
+            (usuario_id,)
+        )
+
+        quadros = cursor.fetchall()
+
+        return quadros
+
+    except HTTPException:
+        raise
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Erro ao listar quadros: {str(e)}"
+        )
+
+    finally:
+        cursor.close()
+        conn.close()
