@@ -164,6 +164,8 @@ O usuário deve estar autenticado.
 **Pós-condição:**
 Após o encerramento da sessão, o usuário deve ser redirecionado para uma página pública, preferencialmente a página de login.
 
+---
+
 ### RF09 — Alterar senha
 
 **Descrição**
