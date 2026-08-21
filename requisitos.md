@@ -164,6 +164,32 @@ O usuário deve estar autenticado.
 **Pós-condição:**
 Após o encerramento da sessão, o usuário deve ser redirecionado para uma página pública, preferencialmente a página de login.
 
+### RF09 — Alterar senha
+
+**Descrição**
+ O sistema deve permitir que usuários autenticados alterem sua senha de acesso exclusivamente por meio da página de perfil.
+
+**Dados necessários:**
+* Senha atual;
+* Nova senha;
+* Confirmação da nova senha.
+
+**Regras:**
+* O usuário deve estar autenticado;
+* A alteração da senha deve ser realizada somente pela página de perfil;
+* O sistema deve verificar se a senha atual está correta;
+* A nova senha deve ser informada;
+* A confirmação da nova senha deve ser igual à nova senha;
+* O sistema deve informar o usuário caso algum dado seja inválido;
+* Após a alteração, a nova senha deverá ser utilizada nos próximos acessos à plataforma.
+
+**Pré-condição:**
+O usuário deve estar autenticado e acessar sua página de perfil.
+
+**Pós-condição:**
+A senha do usuário deve ser atualizada com sucesso, permitindo que ele utilize a nova senha em futuras autenticações.
+
+
 # Requisitos não funcionais
 
 ### RNF01 - Segurança
