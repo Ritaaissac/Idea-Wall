@@ -32,3 +32,5 @@ class Quadro(Base):
         TIMESTAMP,
         server_default=text("CURRENT_TIMESTAMP")
     )
+
+

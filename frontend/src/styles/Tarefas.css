@@ -1,0 +1,994 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+/* =========================================================
+   PÁGINA
+   ========================================================= */
+
+.tarefas-page {
+  min-height: 100vh;
+  width: 100%;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: repeat;
+
+  color: #111;
+
+  overflow-x: hidden;
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.tarefas-page .cq-sidebar {
+  position: fixed;
+
+  top: 40px;
+  bottom: 40px;
+  left: 21px;
+
+  z-index: 50;
+
+  width: 185px;
+  height: calc(100vh - 80px);
+
+  border-radius: 27px;
+
+  background: linear-gradient(
+    180deg,
+    #a58af9 0%,
+    #8555ef 100%
+  );
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 24px 14px 28px;
+
+  color: #fff;
+}
+
+/* =========================================================
+   LOGO
+   ========================================================= */
+
+.tarefas-page .cq-logo-btn {
+  border: 0;
+  background: transparent;
+
+  cursor: pointer;
+
+  margin: 4px 0 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tarefas-page .cq-logo-img {
+  width: 120px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* =========================================================
+   AVATAR
+   ========================================================= */
+
+.tarefas-page .cq-avatar {
+  width: 95px;
+  height: 95px;
+
+  border-radius: 50%;
+  overflow: hidden;
+
+  background: #fff37c;
+
+  border: 4px solid rgba(255, 255, 255, 0.4);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 25px;
+
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.tarefas-page .cq-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* =========================================================
+   MENU
+   ========================================================= */
+
+.tarefas-page .cq-menu {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+.tarefas-page .cq-menu button {
+  width: 100%;
+  min-height: 50px;
+
+  padding: 7px 14px;
+
+  border: 0;
+  border-radius: 25px;
+
+  background: rgba(122, 75, 227, 0.38);
+
+  color: #fff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  transition: 0.2s ease;
+}
+
+.tarefas-page .cq-menu button:hover,
+.tarefas-page .cq-menu button.active {
+  background: #fff37c;
+  color: #8755ef;
+}
+
+.tarefas-page .cq-menu-icon,
+.tarefas-page .cq-img-icon {
+  display: none !important;
+}
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+.tarefas-page .cq-logout {
+  margin-top: auto;
+
+  border: 0;
+  background: transparent;
+
+  color: #fff;
+
+  cursor: pointer;
+
+  font-size: 16px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  transition: 0.2s ease;
+}
+
+.tarefas-page .cq-logout:hover {
+  color: #fff37c;
+}
+
+.tarefas-page .cq-logout-icon {
+  font-size: 22px;
+}
+
+/* =========================================================
+   CONTEÚDO
+   ========================================================= */
+
+.tarefas-content {
+  width: calc(100% - 235px);
+
+  margin-left: 207px;
+
+  padding: 25px 28px 25px 12px;
+
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================================================
+   CABEÇALHO
+   ========================================================= */
+
+.tarefas-header {
+  width: 100%;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  margin-bottom: 12px;
+}
+
+.titulo-quadro {
+  width: 485px;
+  max-width: 70%;
+}
+
+.titulo-quadro input {
+  width: 100%;
+
+  border: 0;
+  outline: none;
+
+  background: transparent;
+
+  color: #8555ef;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  padding: 0 0 4px;
+}
+
+.linha-titulo {
+  display: block;
+
+  width: 100%;
+  height: 2px;
+
+  background: #8555ef;
+
+  opacity: 0.8;
+}
+
+.botao-ordenar {
+  border: 0;
+
+  border-radius: 12px;
+
+  background: #e1d8ff;
+
+  color: #8555ef;
+
+  padding: 5px 18px;
+
+  font-size: 9px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.botao-ordenar:hover {
+  background: #d2c5ff;
+}
+
+/* =========================================================
+   KANBAN
+   ========================================================= */
+
+.kanban {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 24px;
+
+  align-items: start;
+}
+
+/* =========================================================
+   COLUNA
+   ========================================================= */
+
+.kanban-coluna {
+  width: 100%;
+
+  min-height: 205px;
+
+  background: rgba(255, 255, 255, 0.94);
+
+  border-radius: 16px;
+
+  box-shadow:
+    0 3px 9px rgba(70, 50, 120, 0.12);
+
+  overflow: visible;
+
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.kanban-coluna:hover {
+  box-shadow:
+    0 5px 14px rgba(70, 50, 120, 0.15);
+}
+
+/* =========================================================
+   CABEÇALHO DA COLUNA
+   ========================================================= */
+
+.coluna-header {
+  height: 37px;
+
+  padding: 0 15px;
+
+  display: flex;
+  align-items: center;
+
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.coluna-titulo {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  font-size: 10px;
+  font-weight: 500;
+
+  color: #111;
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+
+  border-radius: 50%;
+
+  display: block;
+}
+
+/* Cores dos status */
+
+.fazer .status-dot {
+  background: #8c63ef;
+}
+
+.andamento .status-dot {
+  background: #fff05a;
+}
+
+.concluido .status-dot {
+  background: #35a853;
+}
+
+/* =========================================================
+   LISTA DE TAREFAS
+   ========================================================= */
+
+.lista-tarefas {
+  min-height: 112px;
+
+  padding: 0;
+}
+
+/* =========================================================
+   CARD DA TAREFA
+   ========================================================= */
+
+.tarefa-card {
+  position: relative;
+
+  width: calc(100% - 12px);
+
+  min-height: 54px;
+
+  margin: 5px 6px;
+
+  padding: 8px 8px 6px;
+
+  border: 1px solid #dedede;
+
+  border-radius: 10px;
+
+  background: #fff;
+
+  cursor: grab;
+
+  user-select: none;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.tarefa-card:hover {
+  box-shadow:
+    0 3px 7px rgba(0, 0, 0, 0.08);
+}
+
+.tarefa-card:active {
+  cursor: grabbing;
+}
+
+.tarefa-card.arrastando {
+  opacity: 0.45;
+
+  transform: rotate(1deg) scale(0.98);
+}
+
+/* =========================================================
+   TOPO DA TAREFA
+   ========================================================= */
+
+.tarefa-topo {
+  width: 100%;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 5px;
+}
+
+.tarefa-info {
+  min-width: 0;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 6px;
+}
+
+.tarefa-radio {
+  width: 9px;
+  height: 9px;
+
+  border: 1px solid #111;
+
+  border-radius: 50%;
+
+  margin-top: 2px;
+
+  flex-shrink: 0;
+}
+
+.tarefa-titulo {
+  color: #222;
+
+  font-size: 9px;
+  line-height: 1.3;
+
+  word-break: break-word;
+}
+
+/* =========================================================
+   MENU 3 PONTOS
+   ========================================================= */
+
+.tarefa-menu-container {
+  position: relative;
+
+  flex-shrink: 0;
+}
+
+.tarefa-menu-btn {
+  width: 22px;
+  height: 18px;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #111;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  line-height: 1;
+
+  letter-spacing: 1px;
+
+  cursor: pointer;
+
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tarefa-menu-btn:hover {
+  color: #8555ef;
+}
+
+/* =========================================================
+   MENU DROPDOWN
+   ========================================================= */
+
+.tarefa-menu {
+  position: absolute;
+
+  top: 20px;
+  right: 0;
+
+  z-index: 100;
+
+  width: 105px;
+
+  padding: 4px;
+
+  background: #fff;
+
+  border: 1px solid #e4e4e4;
+
+  border-radius: 8px;
+
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.14);
+}
+
+.tarefa-menu button {
+  width: 100%;
+
+  border: 0;
+
+  background: transparent;
+
+  padding: 7px 6px;
+
+  border-radius: 5px;
+
+  text-align: left;
+
+  color: #333;
+
+  font-size: 9px;
+
+  cursor: pointer;
+}
+
+.tarefa-menu button:hover {
+  background: #f2efff;
+  color: #8555ef;
+}
+
+.tarefa-menu button.excluir:hover {
+  background: #fff0f0;
+  color: #d93025;
+}
+
+/* =========================================================
+   DATA
+   ========================================================= */
+
+.tarefa-data {
+  display: flex;
+  align-items: center;
+
+  justify-content: flex-end;
+
+  gap: 3px;
+
+  margin-top: 7px;
+
+  color: #999;
+
+  font-size: 11px;
+}
+
+.tarefa-data img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   ADICIONAR TAREFA
+   ========================================================= */
+
+.adicionar-tarefa {
+  width: 100%;
+
+  min-height: 36px;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #8555ef;
+
+  font-size: 9px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.adicionar-tarefa:hover {
+  color: #6840d5;
+
+  text-decoration: underline;
+}
+
+/* =========================================================
+   DICA
+   ========================================================= */
+
+.dica-kanban {
+  margin: auto 0 0;
+
+  color: #b07cff;
+
+  font-size: 16px;
+
+  text-align: left;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.dica-kanban img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 200;
+
+  background: rgba(38, 24, 75, 0.35);
+
+  backdrop-filter: blur(2px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+}
+
+.modal-tarefa {
+  width: 100%;
+  max-width: 390px;
+
+  background: #fff;
+
+  border-radius: 18px;
+
+  padding: 22px;
+
+  box-shadow:
+    0 15px 45px rgba(43, 25, 87, 0.25);
+
+  animation: abrirModal 0.18s ease;
+}
+
+@keyframes abrirModal {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 18px;
+}
+
+.modal-header h2 {
+  margin: 0;
+
+  color: #8555ef;
+
+  font-size: 18px;
+}
+
+.modal-fechar {
+  border: 0;
+
+  background: transparent;
+
+  color: #777;
+
+  font-size: 25px;
+
+  cursor: pointer;
+
+  line-height: 1;
+}
+
+.modal-fechar:hover {
+  color: #8555ef;
+}
+
+/* =========================================================
+   FORMULÁRIO DO MODAL
+   ========================================================= */
+
+.modal-tarefa form {
+  display: flex;
+  flex-direction: column;
+
+  gap: 15px;
+}
+
+.modal-tarefa label {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+
+  color: #555;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.modal-tarefa input {
+  width: 100%;
+
+  height: 42px;
+
+  border: 1px solid #ddd;
+
+  border-radius: 9px;
+
+  outline: none;
+
+  padding: 0 12px;
+
+  color: #333;
+
+  font-size: 12px;
+
+  transition: 0.2s ease;
+}
+
+.modal-tarefa input:focus {
+  border-color: #8555ef;
+
+  box-shadow:
+    0 0 0 3px rgba(133, 85, 239, 0.1);
+}
+
+/* =========================================================
+   AÇÕES DO MODAL
+   ========================================================= */
+
+.modal-acoes {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 9px;
+
+  margin-top: 5px;
+}
+
+.modal-acoes button {
+  border: 0;
+
+  border-radius: 8px;
+
+  padding: 9px 15px;
+
+  font-size: 10px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.botao-cancelar {
+  background: #eee;
+
+  color: #555;
+}
+
+.botao-cancelar:hover {
+  background: #e2e2e2;
+}
+
+.botao-salvar {
+  background: #8555ef;
+
+  color: #fff;
+}
+
+.botao-salvar:hover {
+  background: #7042dc;
+}
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+  .tarefas-page .cq-sidebar {
+    width: 165px;
+
+    left: 18px;
+  }
+
+  .tarefas-content {
+    width: calc(100% - 215px);
+
+    margin-left: 190px;
+
+    padding-right: 18px;
+  }
+
+  .kanban {
+    gap: 15px;
+  }
+}
+
+@media (max-width: 900px) {
+  .tarefas-page .cq-sidebar {
+    width: 140px;
+
+    left: 14px;
+  }
+
+  .tarefas-content {
+    width: calc(100% - 180px);
+
+    margin-left: 155px;
+
+    padding-left: 5px;
+    padding-right: 12px;
+  }
+
+  .kanban {
+    grid-template-columns: 1fr;
+
+    max-width: 650px;
+  }
+
+  .titulo-quadro {
+    max-width: 60%;
+  }
+}
+
+@media (max-width: 680px) {
+  .tarefas-page .cq-sidebar {
+    position: relative;
+
+    top: auto;
+    bottom: auto;
+    left: auto;
+
+    width: calc(100% - 20px);
+
+    height: auto;
+
+    min-height: 70px;
+
+    margin: 10px;
+
+    padding: 9px 12px;
+
+    border-radius: 18px;
+
+    flex-direction: row;
+  }
+
+  .tarefas-page .cq-logo-btn {
+    margin: 0 10px 0 0;
+  }
+
+  .tarefas-page .cq-logo-img {
+    width: 65px;
+  }
+
+  .tarefas-page .cq-avatar {
+    width: 45px;
+    height: 45px;
+
+    margin: 0 10px 0 0;
+  }
+
+  .tarefas-page .cq-menu {
+    flex: 1;
+
+    flex-direction: row;
+
+    gap: 6px;
+  }
+
+  .tarefas-page .cq-menu button {
+    min-height: 30px;
+  }
+
+  .tarefas-page .cq-logout {
+    margin: 0 0 0 7px;
+  }
+
+  .tarefas-content {
+    width: 100%;
+
+    margin-left: 0;
+
+    padding: 10px 15px 25px;
+  }
+
+  .tarefas-header {
+    margin-bottom: 15px;
+  }
+
+  .kanban {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 450px) {
+  .tarefas-page .cq-logo-btn {
+    display: none;
+  }
+
+  .tarefas-page .cq-avatar {
+    width: 42px;
+    height: 42px;
+  }
+
+  .tarefas-page .cq-menu button {
+    font-size: 9px;
+    padding: 4px;
+  }
+
+  .tarefas-page .cq-logout {
+    font-size: 9px;
+  }
+
+  .titulo-quadro {
+    width: 60%;
+  }
+
+  .botao-ordenar {
+    padding: 5px 10px;
+  }
+}
