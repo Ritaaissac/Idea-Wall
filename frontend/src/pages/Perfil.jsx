@@ -5,6 +5,7 @@ import "../styles/perfil.css";
 
 import urso from "../assets/img/urso3.png";
 import fundo from "../assets/img/fundo.png";
+import MenuLateral from "../components/MenuLateral";
 
 import iconeNome from "../assets/img/icons/icon1.png";
 import iconeEmail from "../assets/img/icons/icon5.png";
@@ -107,21 +108,23 @@ export default function Perfil() {
   // =====================================
 
   function selecionarIcone(icone) {
+  const usuarioAtualizado = {
+    ...usuario,
+    foto: icone,
+  };
 
-    const usuarioAtualizado = {
-      ...usuario,
-      foto: icone,
-    };
+  setUsuario(usuarioAtualizado);
 
-    setUsuario(usuarioAtualizado);
+  localStorage.setItem(
+    "usuario",
+    JSON.stringify(usuarioAtualizado)
+  );
 
-    localStorage.setItem(
-      "usuario",
-      JSON.stringify(usuarioAtualizado)
-    );
+  // AVISA O MenuLateral imediatamente
+  window.dispatchEvent(new Event("usuarioAtualizado"));
 
-    setMostrarIcones(false);
-  }
+  setMostrarIcones(false);
+}
 
 
   // =====================================
@@ -228,68 +231,7 @@ export default function Perfil() {
           MENU LATERAL
       ====================================== */}
 
-      <aside className="sidebar">
-
-        <img
-          src="src/assets/img/logo.png"
-          alt="Logo"
-          className="logo"
-        />
-
-
-        {/* MINI FOTO DO USUÁRIO */}
-
-        <div className="avatar-sidebar">
-
-          <div className="avatar">
-
-            <img
-              src={usuario.foto || avatarPadrao}
-              alt="Foto do usuário"
-            />
-
-          </div>
-
-        </div>
-
-
-        {/* MENU */}
-
-        <nav className="menu">
-
-          <button
-            onClick={() => navigate("/quadros")}
-            className="quadro-button"
-          >
-            Quadros
-          </button>
-
-
-          <button
-            onClick={() => navigate("/criar-quadro")}
-            className="criar-quadro-button"
-          >
-            Criar quadro
-          </button>
-
-        </nav>
-
-
-        {/* LOGOUT */}
-
-        <button
-          className="logout"
-          onClick={handleLogout}
-        >
-          <span className="icone-logout">
-            ↪
-          </span>
-
-          Logout
-
-        </button>
-
-      </aside>
+      <MenuLateral />
 
 
       {/* =====================================
@@ -553,10 +495,10 @@ export default function Perfil() {
                   Olá, eu sou o Bear! Bem-vindo
                   <br />
 
-                  à sua plataforma de organização pessoal
+                  à sua plataforma de organização
                   <br />
 
-                   e profissional. Crie, organize
+                  pessoal e profissional. Crie, organize
                   <br />
 
                    e conclua suas tarefas com mais
