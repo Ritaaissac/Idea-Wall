@@ -8,6 +8,7 @@ import Cadastro from "./pages/Cadastro";
 import CriarQuadro from "./pages/CriarQuadro";
 import Perfil from "./pages/Perfil";
 import Tarefas from "./pages/Tarefas";
+import Quadros from "./pages/Quadros";
 
 import { ProtectedRoute } from "./ProtectedRoute";
 
@@ -30,6 +31,14 @@ function App() {
 
 
         {/* Rotas Protegidas */}
+        <Route
+          path="/quadros"
+          element={
+            <ProtectedRoute>
+              <Quadros />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/"
