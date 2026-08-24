@@ -495,10 +495,7 @@ async function excluirQuadro(e, quadro) {
 
     <main
       className="quadros-page"
-      style={{
-        "--fundo": `url(${fundo})`,
-      }}
-    >
+       style={{ backgroundImage: `url(${fundo})` }}>
 
       {/* =================================================
           MENU LATERAL
