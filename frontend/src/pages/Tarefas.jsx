@@ -6,9 +6,7 @@ import "../styles/tarefas.css";
 import fundo from "../assets/img/fundo.png";
 import lampada from "../assets/img/lampada.png";
 import calendario from "../assets/img/calendario.png";
-import logoImg from "../assets/img/logo.png";
-import iconeMais from "../assets/img/iconemais.png";
-import usuarioPadrao from "../assets/img/usuario.png";
+import MenuLateral from "../components/MenuLateral";
 
 const COLUNAS = [
   {
@@ -264,70 +262,7 @@ export default function Tarefas() {
           SIDEBAR
           ================================================= */}
 
-      <aside className="cq-sidebar">
-        <button
-          type="button"
-          className="cq-logo-btn"
-          onClick={() => navigate("/quadros")}
-          aria-label="Ir para Quadros"
-        >
-          <img
-            src={logoImg}
-            alt="Idea Wall"
-            className="cq-logo-img"
-          />
-        </button>
-
-        <div
-          className="cq-avatar"
-          onClick={() => navigate("/perfil")}
-          onKeyDown={abrirPerfilComTeclado}
-          role="button"
-          tabIndex={0}
-          aria-label="Ir para o perfil"
-        >
-          <img
-            src={usuario?.foto || usuarioPadrao}
-            alt="Foto do usuário"
-          />
-        </div>
-
-        <nav
-          className="cq-menu"
-          aria-label="Navegação principal"
-        >
-          <button
-            type="button"
-            className="active"
-            onClick={() => navigate("/quadros")}
-          >
-            <span className="cq-menu-icon">▤</span>
-            <span>Quadros</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => navigate("/criar-quadro")}
-          >
-            <img
-              src={iconeMais}
-              alt=""
-              className="cq-img-icon"
-            />
-
-            <span>Criar quadro</span>
-          </button>
-        </nav>
-
-        <button
-          type="button"
-          className="cq-logout"
-          onClick={handleLogout}
-        >
-          <span className="cq-logout-icon">↪</span>
-          <span>Logout</span>
-        </button>
-      </aside>
+      <MenuLateral />
 
       {/* =================================================
           CONTEÚDO PRINCIPAL
