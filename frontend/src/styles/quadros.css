@@ -68,12 +68,12 @@ select {
    PESQUISA
 ========================================================= */
 .quadros-search {
-  width: 505px;
+  width: 600px;
   max-width: 100%;
 
-  height: 43px;
+  height: 47px;
 
-  margin-bottom: 45px;
+  margin: 40px 0 40px 20px;
 
   padding: 0 16px;
 
@@ -109,7 +109,7 @@ select {
 
   color: white;
 
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .quadros-search input::placeholder {
@@ -136,7 +136,7 @@ select {
 
   color: white;
 
-  font-size: 12px;
+  font-size: 15px;
 }
 
 .quadros-search input::placeholder {
@@ -155,13 +155,38 @@ select {
 
   grid-template-columns: 270px 270px;
 
-  gap: 30px 0;
+  gap: 35px 40px;
 
   align-items: start;
 
   width: 540px;
 
   margin-bottom: 30px;
+
+  margin-left: 20px;
+
+   width: 100%;
+  max-width: 760px;
+
+  max-height: calc(100vh - 130px);
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding-right: 12px;
+  padding-bottom: 10px;
+
+  box-sizing: border-box;
+
+  
+}
+
+.quadros-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+.quadros-area::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 
@@ -171,9 +196,11 @@ select {
 .quadro-card {
   position: relative;
 
-  width: 270px;
-  height: 170px;
+  width: 290px;
+  height: 150px;
 
+
+  
   padding: 15px;
 
   border: none;
@@ -211,8 +238,8 @@ select {
 ========================================================= */
 
 .quadro-icon {
-  width: 70px;
-  height: 59px;
+  width: 75px;
+  height: 70px;
 
   flex-shrink: 0;
 
@@ -228,10 +255,11 @@ select {
 }
 
 .quadro-icon svg {
-  width: 42px;
-  height: 42px;
+  width: 50px;
+  height: 50px;
 
-  stroke: currentColor;
+  stroke: white;
+ 
 }
 
 
@@ -249,7 +277,7 @@ select {
 .quadro-info h2 {
   margin: 0 0 4px 0;
 
-  font-size: 18px;
+  font-size: 24px;
 
   line-height: 1.1;
 
@@ -269,11 +297,11 @@ select {
 
   margin: 0;
 
-  font-size: 10px;
+  font-size: 12px;
 
   line-height: 1.2;
 
-  color: #895ff0;
+  color: #ab8ff4;
 
   font-weight: 600;
 
@@ -435,8 +463,8 @@ select {
 .novo-quadro-card {
     position: relative;
 
-  width: 270px;
-  height: 170px;
+  width: 290px;
+  height: 150px;
 
   padding: 15px;
 
@@ -478,8 +506,8 @@ select {
 }
 
 .novo-quadro-card span {
-  width: 45px;
-  height: 45px;
+  width: 60px;
+  height: 60px;
 
   border-radius: 50%;
 
@@ -493,8 +521,8 @@ select {
 }
 
 .novo-quadro-card svg {
-  width: 27px;
-  height: 27px;
+  width: 30px;
+  height: 30px;
 }
 
 
@@ -543,8 +571,8 @@ select {
 }
 
 .quadros-vazio svg {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
 
   margin-bottom: 8px;
 }
@@ -915,7 +943,7 @@ select {
 
   height: calc(100vh - 40px);
 
-  margin: 20px 20px 20px 0;
+  margin: 55px 20px 20px 0;
 
   padding: 32px 27px 0;
 
