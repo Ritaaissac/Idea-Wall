@@ -4,11 +4,8 @@ import "../styles/criarquadro.css";
 
 import urso from "../assets/img/urso4.png";
 import fundo from "../assets/img/fundo.png";
+import MenuLateral from "../components/MenuLateral";
 
-// Import das imagens do menu
-import logoImg from "../assets/img/logo.png";
-import iconeMais from "../assets/img/iconemais.png";
-import usuarioPadrao from "../assets/img/usuario.png";
 
 const ICONS = [
   {
@@ -195,66 +192,8 @@ export default function CriarQuadro() {
       className="criar-quadro-page"
       style={{ backgroundImage: `url(${fundo})` }}
     >
-      {/* SIDEBAR */}
-      <aside className="cq-sidebar">
 
-        <button
-          type="button"
-          className="cq-logo-btn"
-          onClick={() => navigate("/quadros")}
-          aria-label="Ir para Quadros"
-        >
-          <img src={logoImg} alt="Idea Wall" className="cq-logo-img" />
-        </button>
-
-        <div className="cq-avatar" onClick={() => navigate("/perfil")}>
-          {(() => {
-            const usuario = JSON.parse(
-              localStorage.getItem("usuario") || "null"
-            );
-
-            return (
-              <img
-                src={usuario?.foto || usuarioPadrao}
-                alt="Foto do usuário"
-              />
-            );
-          })()}
-        </div>
-
-        <nav
-          className="cq-menu"
-          aria-label="Navegação principal"
-        >
-          <button
-            type="button"
-            onClick={() => navigate("/quadros")}
-          >
-            <span className="cq-menu-icon">▤</span>
-            <span>Quadros</span>
-          </button>
-
-          <button
-            type="button"
-            className="active"
-            aria-current="page"
-          >
-            <img src={iconeMais} alt="" className="cq-img-icon" />
-            <span>Criar quadro</span>
-          </button>
-        </nav>
-
-        <button
-          type="button"
-          className="cq-logout"
-          onClick={handleLogout}
-        >
-          <span className="cq-logout-icon">↪</span>
-          <span>Logout</span>
-        </button>
-
-      </aside>
-
+      <MenuLateral />
       {/* CONTEÚDO */}
       <main className="cq-main">
 
