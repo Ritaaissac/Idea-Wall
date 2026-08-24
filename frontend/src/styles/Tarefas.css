@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap");
+@import url("[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap)");
 
 * {
   box-sizing: border-box;
@@ -25,8 +25,8 @@ input {
    ========================================================= */
 
 .tarefas-page {
-  min-height: 100vh;
   width: 100%;
+  min-height: 100vh;
 
   background-size: cover;
   background-position: center;
@@ -37,19 +37,22 @@ input {
   overflow-x: hidden;
 }
 
-
 /* =========================================================
    CONTEÚDO
    ========================================================= */
 
 .tarefas-content {
-  width: calc(100% - 235px);
-
-  margin-left: 207px;
-
-  padding: 25px 28px 25px 12px;
-
+  width: auto;
+  min-width: 0;
   min-height: 100vh;
+
+  margin-left: 232px;
+
+  padding:
+    66px
+    clamp(28px, 4vw, 60px)
+    30px
+    18px;
 
   display: flex;
   flex-direction: column;
@@ -61,21 +64,23 @@ input {
 
 .tarefas-header {
   width: 100%;
+  max-width: 1070px;
+
+  margin: 0 auto 14px;
 
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-
-  margin-bottom: 12px;
 }
 
 .titulo-quadro {
-  width: 485px;
-  max-width: 70%;
+  width: min(485px, 55%);
 }
 
 .titulo-quadro input {
   width: 100%;
+
+  padding: 0 0 4px;
 
   border: 0;
   outline: none;
@@ -84,10 +89,8 @@ input {
 
   color: #8555ef;
 
-  font-size: 12px;
+  font-size: 20px;
   font-weight: 500;
-
-  padding: 0 0 4px;
 }
 
 .linha-titulo {
@@ -102,15 +105,15 @@ input {
 }
 
 .botao-ordenar {
-  border: 0;
+  position: relative;
 
+  padding: 5px 18px;
+
+  border: 0;
   border-radius: 12px;
 
   background: #e1d8ff;
-
   color: #8555ef;
-
-  padding: 5px 18px;
 
   font-size: 9px;
 
@@ -123,19 +126,62 @@ input {
   background: #d2c5ff;
 }
 
+.ordenar-container {
+  position: relative;
+}
+
+.menu-ordenar {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 5px);
+  right: 0;
+
+  min-width: 145px;
+  padding: 4px;
+
+  border: 1px solid #e1d8ff;
+  border-radius: 8px;
+
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(70, 50, 120, 0.16);
+}
+
+.menu-ordenar button {
+  display: block;
+  width: 100%;
+  padding: 7px 9px;
+
+  border: 0;
+  border-radius: 5px;
+
+  background: transparent;
+  color: #333;
+  font-size: 9px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menu-ordenar button:hover {
+  background: #f0ebff;
+  color: #8555ef;
+}
+
 /* =========================================================
    KANBAN
    ========================================================= */
 
 .kanban {
   width: 100%;
+  max-width: 1070px;
+
+  margin: 0 auto;
 
   display: grid;
 
   grid-template-columns:
-    repeat(3, minmax(0, 1fr));
+    repeat(3, minmax(240px, 1fr));
 
-  gap: 24px;
+  gap: clamp(16px, 2vw, 24px);
 
   align-items: start;
 }
@@ -146,7 +192,7 @@ input {
 
 .kanban-coluna {
   width: 100%;
-
+  min-width: 0;
   min-height: 205px;
 
   background: rgba(255, 255, 255, 0.94);
@@ -177,10 +223,10 @@ input {
 
   padding: 0 15px;
 
+  border-bottom: 1px solid #e8e8e8;
+
   display: flex;
   align-items: center;
-
-  border-bottom: 1px solid #e8e8e8;
 }
 
 .coluna-titulo {
@@ -189,19 +235,19 @@ input {
 
   gap: 7px;
 
-  font-size: 10px;
-  font-weight: 500;
-
   color: #111;
+
+  font-size: 11px;
+  font-weight: 500;
 }
 
 .status-dot {
+  display: block;
+
   width: 9px;
   height: 9px;
 
   border-radius: 50%;
-
-  display: block;
 }
 
 /* Cores dos status */
@@ -236,21 +282,17 @@ input {
   position: relative;
 
   width: calc(100% - 12px);
-
   min-height: 54px;
 
   margin: 5px 6px;
-
   padding: 8px 8px 6px;
 
   border: 1px solid #dedede;
-
   border-radius: 10px;
 
   background: #fff;
 
   cursor: grab;
-
   user-select: none;
 
   transition:
@@ -301,11 +343,10 @@ input {
   width: 9px;
   height: 9px;
 
-  border: 1px solid #111;
-
-  border-radius: 50%;
-
   margin-top: 2px;
+
+  border: 1px solid #111;
+  border-radius: 50%;
 
   flex-shrink: 0;
 }
@@ -313,14 +354,14 @@ input {
 .tarefa-titulo {
   color: #222;
 
-  font-size: 9px;
+  font-size: 10px;
   line-height: 1.3;
 
   word-break: break-word;
 }
 
 /* =========================================================
-   MENU 3 PONTOS
+   MENU DE TRÊS PONTOS
    ========================================================= */
 
 .tarefa-menu-container {
@@ -333,22 +374,19 @@ input {
   width: 22px;
   height: 18px;
 
+  padding: 0;
+
   border: 0;
 
   background: transparent;
-
   color: #111;
 
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-
   line-height: 1;
-
   letter-spacing: 1px;
 
   cursor: pointer;
-
-  padding: 0;
 
   display: flex;
   align-items: center;
@@ -375,11 +413,10 @@ input {
 
   padding: 4px;
 
-  background: #fff;
-
   border: 1px solid #e4e4e4;
-
   border-radius: 8px;
+
+  background: #fff;
 
   box-shadow:
     0 5px 15px rgba(0, 0, 0, 0.14);
@@ -388,19 +425,17 @@ input {
 .tarefa-menu button {
   width: 100%;
 
-  border: 0;
-
-  background: transparent;
-
   padding: 7px 6px;
 
+  border: 0;
   border-radius: 5px;
+
+  background: transparent;
+  color: #333;
 
   text-align: left;
 
-  color: #333;
-
-  font-size: 9px;
+  font-size: 10px;
 
   cursor: pointer;
 }
@@ -420,14 +455,13 @@ input {
    ========================================================= */
 
 .tarefa-data {
+  margin-top: 7px;
+
   display: flex;
   align-items: center;
-
   justify-content: flex-end;
 
   gap: 3px;
-
-  margin-top: 7px;
 
   color: #999;
 
@@ -437,7 +471,9 @@ input {
 .tarefa-data img {
   width: 18px;
   height: 18px;
+
   object-fit: contain;
+
   flex-shrink: 0;
 }
 
@@ -447,13 +483,11 @@ input {
 
 .adicionar-tarefa {
   width: 100%;
-
   min-height: 36px;
 
   border: 0;
 
   background: transparent;
-
   color: #8555ef;
 
   font-size: 9px;
@@ -474,23 +508,29 @@ input {
    ========================================================= */
 
 .dica-kanban {
-  margin: auto 0 0;
+  width: 100%;
+  max-width: 1070px;
+
+  margin: 28px auto 0;
 
   color: #b07cff;
 
-  font-size: 16px;
-
+  font-size: 14px;
+  line-height: 1.4;
   text-align: left;
 
   display: flex;
   align-items: center;
+
   gap: 7px;
 }
 
 .dica-kanban img {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
+
   object-fit: contain;
+
   flex-shrink: 0;
 }
 
@@ -505,6 +545,8 @@ input {
 
   z-index: 200;
 
+  padding: 20px;
+
   background: rgba(38, 24, 75, 0.35);
 
   backdrop-filter: blur(2px);
@@ -512,19 +554,17 @@ input {
   display: flex;
   align-items: center;
   justify-content: center;
-
-  padding: 20px;
 }
 
 .modal-tarefa {
   width: 100%;
   max-width: 390px;
 
-  background: #fff;
+  padding: 22px;
 
   border-radius: 18px;
 
-  padding: 22px;
+  background: #fff;
 
   box-shadow:
     0 15px 45px rgba(43, 25, 87, 0.25);
@@ -535,21 +575,23 @@ input {
 @keyframes abrirModal {
   from {
     opacity: 0;
+
     transform: translateY(8px) scale(0.98);
   }
 
   to {
     opacity: 1;
+
     transform: translateY(0) scale(1);
   }
 }
 
 .modal-header {
+  margin-bottom: 18px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  margin-bottom: 18px;
 }
 
 .modal-header h2 {
@@ -564,14 +606,12 @@ input {
   border: 0;
 
   background: transparent;
-
   color: #777;
 
   font-size: 25px;
+  line-height: 1;
 
   cursor: pointer;
-
-  line-height: 1;
 }
 
 .modal-fechar:hover {
@@ -603,16 +643,13 @@ input {
 
 .modal-tarefa input {
   width: 100%;
-
   height: 42px;
 
-  border: 1px solid #ddd;
-
-  border-radius: 9px;
-
-  outline: none;
-
   padding: 0 12px;
+
+  border: 1px solid #ddd;
+  border-radius: 9px;
+  outline: none;
 
   color: #333;
 
@@ -633,21 +670,19 @@ input {
    ========================================================= */
 
 .modal-acoes {
-  display: flex;
+  margin-top: 5px;
 
+  display: flex;
   justify-content: flex-end;
 
   gap: 9px;
-
-  margin-top: 5px;
 }
 
 .modal-acoes button {
-  border: 0;
-
-  border-radius: 8px;
-
   padding: 9px 15px;
+
+  border: 0;
+  border-radius: 8px;
 
   font-size: 10px;
 
@@ -658,7 +693,6 @@ input {
 
 .botao-cancelar {
   background: #eee;
-
   color: #555;
 }
 
@@ -668,7 +702,6 @@ input {
 
 .botao-salvar {
   background: #8555ef;
-
   color: #fff;
 }
 
@@ -677,146 +710,133 @@ input {
 }
 
 /* =========================================================
-   RESPONSIVIDADE
+   RESPONSIVIDADE DO CONTEÚDO
    ========================================================= */
 
-@media (max-width: 1000px) {
-  .tarefas-page .cq-sidebar {
-    width: 165px;
 
-    left: 18px;
-  }
 
+@media (min-width: 901px) and (max-width: 1150px) {
   .tarefas-content {
-    width: calc(100% - 215px);
+    margin-left: 205px;
 
-    margin-left: 190px;
-
-    padding-right: 18px;
+    padding-right: 22px;
+    padding-left: 12px;
   }
 
   .kanban {
-    gap: 15px;
+    grid-template-columns:
+      repeat(3, minmax(205px, 1fr));
+
+    gap: 14px;
   }
 }
 
-@media (max-width: 900px) {
-  .tarefas-page .cq-sidebar {
-    width: 140px;
+/* Tablets: duas colunas */
 
-    left: 14px;
-  }
-
+@media (min-width: 681px) and (max-width: 900px) {
   .tarefas-content {
-    width: calc(100% - 180px);
+    width: auto;
+    min-width: 0;
 
     margin-left: 155px;
 
-    padding-left: 5px;
-    padding-right: 12px;
+    padding: 35px 20px 30px 16px;
   }
 
-  .kanban {
-    grid-template-columns: 1fr;
-
-    max-width: 650px;
-  }
-
-  .titulo-quadro {
-    max-width: 60%;
-  }
-}
-
-@media (max-width: 680px) {
-  .tarefas-page .cq-sidebar {
-    position: relative;
-
-    top: auto;
-    bottom: auto;
-    left: auto;
-
-    width: calc(100% - 20px);
-
-    height: auto;
-
-    min-height: 70px;
-
-    margin: 10px;
-
-    padding: 9px 12px;
-
-    border-radius: 18px;
-
-    flex-direction: row;
-  }
-
-  .tarefas-page .cq-logo-btn {
-    margin: 0 10px 0 0;
-  }
-
-  .tarefas-page .cq-logo-img {
-    width: 65px;
-  }
-
-  .tarefas-page .cq-avatar {
-    width: 45px;
-    height: 45px;
-
-    margin: 0 10px 0 0;
-  }
-
-  .tarefas-page .cq-menu {
-    flex: 1;
-
-    flex-direction: row;
-
-    gap: 6px;
-  }
-
-  .tarefas-page .cq-menu button {
-    min-height: 30px;
-  }
-
-  .tarefas-page .cq-logout {
-    margin: 0 0 0 7px;
-  }
-
-  .tarefas-content {
+  .tarefas-header,
+  .kanban,
+  .dica-kanban {
     width: 100%;
+    max-width: 700px;
 
-    margin-left: 0;
-
-    padding: 10px 15px 25px;
+    margin-right: auto;
+    margin-left: auto;
   }
 
   .tarefas-header {
     margin-bottom: 15px;
   }
 
+  .titulo-quadro {
+    max-width: 60%;
+  }
+
+  .titulo-quadro input {
+    font-size: 18px;
+  }
+
+  .kanban {
+    grid-template-columns:
+      repeat(2, minmax(220px, 1fr));
+
+    gap: 16px;
+  }
+
+  .kanban-coluna {
+    min-width: 0;
+  }
+
+  .dica-kanban {
+    margin-top: 25px;
+
+    font-size: 14px;
+  }
+
+  .dica-kanban img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* Celulares: uma coluna */
+
+@media (max-width: 680px) {
+  .tarefas-content {
+    width: 100%;
+
+    margin-left: 0;
+
+    padding: 25px 15px 30px;
+  }
+
+  .tarefas-header,
+  .kanban,
+  .dica-kanban {
+    width: 100%;
+    max-width: 520px;
+
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .tarefas-header {
+    margin-bottom: 15px;
+  }
+
+  .titulo-quadro {
+    max-width: 60%;
+  }
+
   .kanban {
     grid-template-columns: 1fr;
+
+    gap: 16px;
+  }
+
+  .dica-kanban {
+    margin-top: 22px;
+
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .dica-kanban img {
+    width: 22px;
+    height: 22px;
   }
 }
 
 @media (max-width: 450px) {
-  .tarefas-page .cq-logo-btn {
-    display: none;
-  }
-
-  .tarefas-page .cq-avatar {
-    width: 42px;
-    height: 42px;
-  }
-
-  .tarefas-page .cq-menu button {
-    font-size: 9px;
-    padding: 4px;
-  }
-
-  .tarefas-page .cq-logout {
-    font-size: 9px;
-  }
-
   .titulo-quadro {
     width: 60%;
   }

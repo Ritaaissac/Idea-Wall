@@ -59,7 +59,7 @@ function App() {
         />
 
         <Route
-          path="/tarefas"
+          path="/tarefas/:quadroId"
           element={
             <ProtectedRoute>
               <Tarefas />

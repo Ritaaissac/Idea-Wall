@@ -597,9 +597,11 @@ async function excluirQuadro(e, quadro) {
               <div
                 key={quadro.id}
                 className="quadro-card"
-                onClick={() => {
-                  console.log("Quadro selecionado:", quadro);
-                }}
+                onClick={() =>
+                  navigate(`/tarefas/${quadro.id}`, {
+                    state: { quadro },
+                  })
+                }
               >
 
                 <div className="quadro-icon">

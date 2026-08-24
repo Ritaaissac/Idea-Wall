@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import "../styles/tarefas.css";
 
@@ -26,45 +26,52 @@ const COLUNAS = [
   },
 ];
 
-const tarefasIniciais = [
-  {
-    id: 1,
-    titulo: "Lista de PIU",
-    data: "23/07",
-    status: "a-fazer",
-  },
-  {
-    id: 2,
-    titulo: "Consertar cores do site",
-    data: "23/07",
-    status: "a-fazer",
-  },
-  {
-    id: 3,
-    titulo: "Fazer atividade de sociologia",
-    data: "23/07",
-    status: "a-fazer",
-  },
-];
-
 export default function Tarefas() {
   const navigate = useNavigate();
+  const { quadroId } = useParams();
+  const location = useLocation();
+  const [quadro, setQuadro] = useState(location.state?.quadro || null);
+  const chaveTarefas = `tarefas-${quadroId || "padrao"}`;
+
+  useEffect(() => {
+    if (quadro || !quadroId) return;
+
+    const token = localStorage.getItem("token")?.replace(/^"+|"+$/g, "").trim();
+
+    if (!token) return;
+
+    fetch(`http://127.0.0.1:8000/quadros/${quadroId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error("Quadro não encontrado");
+        return response.json();
+      })
+      .then((dados) => setQuadro(dados))
+      .catch((error) => console.error("Erro ao carregar quadro:", error));
+  }, [quadro, quadroId]);
 
   const [tarefas, setTarefas] = useState(() => {
     try {
-      const salvas = localStorage.getItem("tarefas");
+      const salvas = localStorage.getItem(chaveTarefas);
 
       return salvas
         ? JSON.parse(salvas)
-        : tarefasIniciais;
+        : [];
     } catch {
-      return tarefasIniciais;
+      return [];
     }
   });
 
   const [tarefaArrastada, setTarefaArrastada] = useState(null);
 
   const [menuAberto, setMenuAberto] = useState(null);
+
+  const [ordenacaoAberta, setOrdenacaoAberta] = useState(false);
+
+  const [ordenarPor, setOrdenarPor] = useState("manual");
 
   const [modalAberto, setModalAberto] = useState(false);
 
@@ -77,11 +84,8 @@ export default function Tarefas() {
   const [dataTarefa, setDataTarefa] = useState("");
 
   useEffect(() => {
-    localStorage.setItem(
-      "tarefas",
-      JSON.stringify(tarefas)
-    );
-  }, [tarefas]);
+    localStorage.setItem(chaveTarefas, JSON.stringify(tarefas));
+  }, [chaveTarefas, tarefas]);
 
   function handleLogout() {
     localStorage.removeItem("usuario");
@@ -148,6 +152,34 @@ export default function Tarefas() {
 
   function finalizarArraste() {
     setTarefaArrastada(null);
+  }
+
+  function ordenarTarefas(tarefasDaColuna) {
+    if (ordenarPor === "manual") {
+      return tarefasDaColuna;
+    }
+
+    return [...tarefasDaColuna].sort((tarefaA, tarefaB) => {
+      if (ordenarPor === "alfabetica") {
+        return tarefaA.titulo.localeCompare(
+          tarefaB.titulo,
+          "pt-BR",
+          { sensitivity: "base" }
+        );
+      }
+
+      const [diaA, mesA] = (tarefaA.data || "").split("/").map(Number);
+      const [diaB, mesB] = (tarefaB.data || "").split("/").map(Number);
+      const dataA = mesA && diaA ? mesA * 100 + diaA : Infinity;
+      const dataB = mesB && diaB ? mesB * 100 + diaB : Infinity;
+
+      return dataA - dataB;
+    });
+  }
+
+  function selecionarOrdenacao(opcao) {
+    setOrdenarPor(opcao);
+    setOrdenacaoAberta(false);
   }
 
   /* =====================================================
@@ -273,20 +305,36 @@ export default function Tarefas() {
           <div className="titulo-quadro">
             <input
               type="text"
-              defaultValue="Nome do quadro"
+              defaultValue={quadro?.titulo || "Nome do quadro"}
               aria-label="Nome do quadro"
             />
 
             <span className="linha-titulo"></span>
           </div>
 
-          <button
-            type="button"
-            className="botao-ordenar"
-          >
-            Ordenar
-            <span>⌄</span>
-          </button>
+          <div className="ordenar-container" onClick={(event) => event.stopPropagation()}>
+            <button
+              type="button"
+              className="botao-ordenar"
+              onClick={() => setOrdenacaoAberta(!ordenacaoAberta)}
+              aria-expanded={ordenacaoAberta}
+              aria-haspopup="menu"
+            >
+              Ordenar
+              <span>⌄</span>
+            </button>
+
+            {ordenacaoAberta && (
+              <div className="menu-ordenar" role="menu">
+                <button type="button" onClick={() => selecionarOrdenacao("data")}>
+                  Por data
+                </button>
+                <button type="button" onClick={() => selecionarOrdenacao("alfabetica")}>
+                  Ordem alfabética
+                </button>
+              </div>
+            )}
+          </div>
         </header>
 
         {/* =================================================
@@ -295,9 +343,10 @@ export default function Tarefas() {
 
         <section className="kanban">
           {COLUNAS.map((coluna) => {
-            const tarefasDaColuna = tarefas.filter(
-              (tarefa) =>
-                tarefa.status === coluna.id
+            const tarefasDaColuna = ordenarTarefas(
+              tarefas.filter(
+                (tarefa) => tarefa.status === coluna.id
+              )
             );
 
             return (

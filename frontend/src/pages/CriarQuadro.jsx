@@ -174,7 +174,9 @@ export default function CriarQuadro() {
         const data = await response.json();
         console.log("Sucesso ao salvar no MySQL:", data);
         alert("Quadro criado com sucesso!");
-        navigate("/quadros");
+        navigate(`/tarefas/${data.id}`, {
+          state: { quadro: data },
+        });
       } else {
         const errorData = await response.json();
         alert(`Erro ao criar quadro: ${errorData.detail || "Falha na requisição"}`);

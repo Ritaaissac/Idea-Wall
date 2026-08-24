@@ -104,9 +104,18 @@ def criar_quadro(
 
         conn.commit()
 
-        return {
-            "mensagem": "Quadro criado com sucesso!"
-        }
+        quadro_id = cursor.lastrowid
+
+        cursor.execute(
+            """
+            SELECT id, titulo, descricao, icone, criado_em
+            FROM quadros
+            WHERE id = %s AND usuario_id = %s
+            """,
+            (quadro_id, usuario_id)
+        )
+
+        return cursor.fetchone()
 
     except HTTPException:
         conn.rollback()
@@ -187,6 +196,56 @@ def listar_quadros(
             status_code=500,
             detail=f"Erro ao listar quadros: {str(e)}"
         )
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
+# =====================================================
+# BUSCAR QUADRO POR ID
+# =====================================================
+
+@router.get("/{quadro_id}")
+def buscar_quadro(
+    quadro_id: int,
+    email_usuario: str = Depends(obter_usuario_logado)
+):
+    conn = conectar()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "SELECT id FROM usuarios WHERE email = %s",
+            (email_usuario,)
+        )
+
+        usuario = cursor.fetchone()
+
+        if not usuario:
+            raise HTTPException(
+                status_code=404,
+                detail="Usuário não encontrado."
+            )
+
+        cursor.execute(
+            """
+            SELECT id, titulo, descricao, icone, criado_em
+            FROM quadros
+            WHERE id = %s AND usuario_id = %s
+            """,
+            (quadro_id, usuario["id"])
+        )
+
+        quadro = cursor.fetchone()
+
+        if not quadro:
+            raise HTTPException(
+                status_code=404,
+                detail="Quadro não encontrado."
+            )
+
+        return quadro
 
     finally:
         cursor.close()
