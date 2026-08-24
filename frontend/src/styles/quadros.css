@@ -1,0 +1,1254 @@
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+
+/* =========================================================
+   PÁGINA
+========================================================= */
+
+.quadros-page {
+  position: relative;
+
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+
+  overflow: hidden;
+
+  background-color: #fffdf0;
+
+  color: #7447e8;
+}
+
+
+/* =========================================================
+   CONTEÚDO CENTRAL
+========================================================= */
+
+.quadros-content {
+  flex: 1;
+  min-width: 0;
+
+  margin-left: 260px;
+
+  padding: 20px 30px 30px 50px;
+
+  position: relative;
+  z-index: 2;
+}
+
+
+/* =========================================================
+   PESQUISA
+========================================================= */
+.quadros-search {
+  width: 505px;
+  max-width: 100%;
+
+  height: 43px;
+
+  margin-bottom: 45px;
+
+  padding: 0 16px;
+
+  border-radius: 22px;
+
+  background: #8b5cf2;
+
+  color: white;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  box-shadow:
+    0 5px 12px rgba(119, 72, 225, 0.12);
+}
+
+.quadros-search svg {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+}
+
+.quadros-search input {
+  flex: 1;
+  min-width: 0;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: white;
+
+  font-size: 13px;
+}
+
+.quadros-search input::placeholder {
+  color: white;
+  opacity: 1;
+}
+
+.quadros-search svg {
+  width: 18px;
+  height: 18px;
+
+  flex-shrink: 0;
+}
+
+.quadros-search input {
+  flex: 1;
+
+  min-width: 0;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: white;
+
+  font-size: 12px;
+}
+
+.quadros-search input::placeholder {
+  color: white;
+
+  opacity: 1;
+}
+
+
+/* =========================================================
+   ÁREA DOS QUADROS
+========================================================= */
+
+.quadros-area {
+  display: grid;
+
+  grid-template-columns: 270px 270px;
+
+  gap: 30px 0;
+
+  align-items: start;
+
+  width: 540px;
+
+  margin-bottom: 30px;
+}
+
+
+/* =========================================================
+   CARD DO QUADRO
+========================================================= */
+.quadro-card {
+  position: relative;
+
+  width: 270px;
+  height: 170px;
+
+  padding: 15px;
+
+  border: none;
+  border-radius: 15px;
+
+  background: #fff391;
+
+  color: #8050e9;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+
+  text-align: left;
+
+  box-shadow:
+    0 3px 8px rgba(80, 50, 150, 0.05);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.quadro-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 8px 15px rgba(115, 72, 206, 0.14);
+}
+
+
+/* =========================================================
+   ÍCONE DO QUADRO
+========================================================= */
+
+.quadro-icon {
+  width: 70px;
+  height: 59px;
+
+  flex-shrink: 0;
+
+  border-radius: 8px;
+
+  background: #925df4;
+
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quadro-icon svg {
+  width: 42px;
+  height: 42px;
+
+  stroke: currentColor;
+}
+
+
+/* =========================================================
+   INFORMAÇÕES DO QUADRO
+========================================================= */
+.quadro-info {
+  min-width: 0;
+
+  margin-left: 14px;
+
+  padding-right: 25px;
+}
+
+.quadro-info h2 {
+  margin: 0 0 4px 0;
+
+  font-size: 18px;
+
+  line-height: 1.1;
+
+  color: #7950e8;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+.quadro-info p {
+  width: 120px;
+
+  margin: 0;
+
+  font-size: 10px;
+
+  line-height: 1.2;
+
+  color: #895ff0;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   TRÊS PONTOS
+========================================================= */
+
+.dots-button {
+  position: absolute;
+
+  top: 8px;
+  right: 10px;
+
+  width: 32px;
+  height: 32px;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 8px;
+
+  background: transparent;
+
+  color: #8354eb;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  z-index: 10;
+
+  transition: background 0.2s ease;
+}
+
+.dots-button:hover {
+  background: rgba(131, 84, 235, 0.12);
+}
+
+.dots-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+
+/* =========================================================
+   MENU DOS TRÊS PONTOS
+========================================================= */
+
+.quadro-menu {
+  position: absolute;
+
+  top: 45px;
+  right: 10px;
+
+  width: 165px;
+
+  padding: 7px;
+
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 25px
+    rgba(80, 50, 150, 0.20);
+
+  z-index: 50;
+
+  animation: aparecer-menu-quadro 0.15s ease;
+}
+
+@keyframes aparecer-menu-quadro {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================================
+   BOTÕES DO MENU
+========================================================= */
+
+.quadro-menu-item {
+  width: 100%;
+
+  min-height: 38px;
+
+  padding: 9px 11px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: transparent;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  font-family: "Poppins", sans-serif;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.quadro-menu-item svg {
+  width: 16px;
+  height: 16px;
+
+  flex-shrink: 0;
+}
+
+.quadro-menu-item.editar {
+  color: #7950e8;
+}
+
+.quadro-menu-item.editar:hover {
+  background: #f1ebff;
+}
+
+.quadro-menu-item.excluir {
+  color: #d94b63;
+}
+
+.quadro-menu-item.excluir:hover {
+  background: #fff0f2;
+}
+
+
+/* =========================================================
+   NOVO QUADRO
+========================================================= */
+.novo-quadro-card {
+    position: relative;
+
+  width: 270px;
+  height: 170px;
+
+  padding: 15px;
+
+  border: none;
+  border-radius: 15px;
+
+  background: #fff391;
+
+  color: #8050e9;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+
+  text-align: left;
+
+  box-shadow:
+    0 3px 8px rgba(80, 50, 150, 0.05);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.novo-quadro-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 8px 15px rgba(115, 72, 206, 0.14);
+}
+
+.novo-quadro-card span {
+  width: 45px;
+  height: 45px;
+
+  border-radius: 50%;
+
+  background: #925df4;
+
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.novo-quadro-card svg {
+  width: 27px;
+  height: 27px;
+}
+
+
+/* =========================================================
+   LOADING / ERRO / VAZIO
+========================================================= */
+
+.quadros-loading,
+.quadros-error,
+.quadros-vazio {
+  grid-column: 1 / -1;
+
+  width: 100%;
+
+  padding: 25px;
+
+  text-align: center;
+
+  color: #8050e9;
+}
+
+.quadros-loading {
+  font-size: 13px;
+}
+
+.quadros-error {
+  color: #c0395b;
+
+  font-size: 13px;
+}
+
+.quadros-error button {
+  margin-top: 10px;
+
+  padding: 7px 15px;
+
+  border: none;
+
+  border-radius: 20px;
+
+  background: #8b5cf2;
+
+  color: white;
+
+  cursor: pointer;
+}
+
+.quadros-vazio svg {
+  width: 32px;
+  height: 32px;
+
+  margin-bottom: 8px;
+}
+
+.quadros-vazio h2 {
+  margin: 0;
+
+  font-size: 18px;
+
+  color: #7950e8;
+}
+
+.quadros-vazio p {
+  margin-top: 5px;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   MODAL DE EDIÇÃO
+========================================================= */
+
+.modal-quadro-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  padding: 20px;
+
+  background: rgba(50, 35, 80, 0.45);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 1000;
+
+  animation: aparecer-overlay-quadro 0.2s ease;
+}
+
+@keyframes aparecer-overlay-quadro {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-quadro {
+  position: relative;
+
+  width: 100%;
+  max-width: 500px;
+
+  max-height: calc(100vh - 40px);
+
+  overflow-y: auto;
+
+  padding: 30px;
+
+  border-radius: 22px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 20px 60px
+    rgba(50, 35, 100, 0.25);
+
+  animation: aparecer-modal-quadro 0.2s ease;
+}
+
+@keyframes aparecer-modal-quadro {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* =========================================================
+   FECHAR MODAL
+========================================================= */
+
+.modal-quadro-fechar {
+  position: absolute;
+
+  top: 15px;
+  right: 15px;
+
+  width: 34px;
+  height: 34px;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #f3f0fa;
+
+  color: #7950e8;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.modal-quadro-fechar:hover {
+  background: #e8e0f8;
+
+  transform: rotate(90deg);
+}
+
+.modal-quadro-fechar svg {
+  width: 18px;
+  height: 18px;
+}
+
+
+/* =========================================================
+   CABEÇALHO DO MODAL
+========================================================= */
+
+.modal-quadro-header {
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  margin-bottom: 25px;
+
+  padding-right: 35px;
+}
+
+.modal-quadro-header > svg {
+  width: 42px;
+  height: 42px;
+
+  padding: 10px;
+
+  flex-shrink: 0;
+
+  border-radius: 12px;
+
+  background: #f1ebff;
+
+  color: #7950e8;
+}
+
+.modal-quadro-header h2 {
+  margin: 0;
+
+  color: #7950e8;
+
+  font-size: 21px;
+
+  font-weight: 700;
+}
+
+.modal-quadro-header p {
+  margin: 4px 0 0;
+
+  color: #777;
+
+  font-size: 11px;
+
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   CAMPOS DO MODAL
+========================================================= */
+
+.campo-quadro-modal {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+
+  margin-bottom: 17px;
+}
+
+.campo-quadro-modal label {
+  color: #6f49d8;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+.campo-quadro-modal input,
+.campo-quadro-modal textarea,
+.campo-quadro-modal select {
+  width: 100%;
+
+  padding: 11px 13px;
+
+  border: 1px solid #ddd5ef;
+
+  border-radius: 10px;
+
+  outline: none;
+
+  background: #fff;
+
+  color: #555;
+
+  font-family: "Poppins", sans-serif;
+
+  font-size: 12px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.campo-quadro-modal input {
+  height: 42px;
+}
+
+.campo-quadro-modal textarea {
+  min-height: 95px;
+
+  resize: vertical;
+}
+
+.campo-quadro-modal select {
+  height: 42px;
+
+  cursor: pointer;
+}
+
+.campo-quadro-modal input:focus,
+.campo-quadro-modal textarea:focus,
+.campo-quadro-modal select:focus {
+  border-color: #8b5cf2;
+
+  box-shadow:
+    0 0 0 3px rgba(139, 92, 242, 0.10);
+}
+
+.campo-quadro-modal input::placeholder,
+.campo-quadro-modal textarea::placeholder {
+  color: #aaa;
+}
+
+
+/* =========================================================
+   BOTÕES DO MODAL
+========================================================= */
+
+.modal-quadro-acoes {
+  display: flex;
+
+  justify-content: flex-end;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-top: 25px;
+}
+
+.modal-quadro-cancelar,
+.modal-quadro-salvar {
+  min-height: 40px;
+
+  padding: 0 17px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  font-family: "Poppins", sans-serif;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.modal-quadro-cancelar {
+  background: #f1f1f1;
+
+  color: #555;
+}
+
+.modal-quadro-cancelar:hover {
+  background: #e5e5e5;
+
+  transform: translateY(-1px);
+}
+
+.modal-quadro-salvar {
+  background: #8b5cf2;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 4px 10px
+    rgba(119, 72, 225, 0.18);
+}
+
+.modal-quadro-salvar:hover {
+  background: #7950e8;
+
+  transform: translateY(-1px);
+}
+
+.modal-quadro-salvar svg {
+  width: 15px;
+  height: 15px;
+}
+
+.modal-quadro-cancelar:disabled,
+.modal-quadro-salvar:disabled,
+.modal-quadro-fechar:disabled {
+  opacity: 0.55;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+
+/* =========================================================
+   PAINEL DIREITO
+========================================================= */
+
+.quadros-right {
+  position: relative;
+
+  z-index: 4;
+
+  flex-shrink: 0;
+
+  width: 480px;
+
+  height: calc(100vh - 40px);
+
+  margin: 20px 20px 20px 0;
+
+  padding: 32px 27px 0;
+
+  border-radius: 25px;
+
+  background: linear-gradient(
+    180deg,
+    #a88ef8 0%,
+    #8c5df2 100%
+  );
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   PROGRESSO
+========================================================= */
+
+.progresso-item {
+  margin-bottom: 50px;
+}
+
+.progresso-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 6px;
+
+  color: white;
+
+  font-size: 14px;
+}
+
+.progresso-header strong {
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   BARRA
+========================================================= */
+
+.barra {
+  width: 100%;
+
+  height: 15px;
+
+  border-radius: 10px;
+
+  overflow: hidden;
+
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.barra span {
+  display: block;
+
+  height: 100%;
+
+  border-radius: 10px;
+
+  background: #eee6e4;
+}
+
+
+/* =========================================================
+   URSO
+========================================================= */
+
+.urso-box {
+  position: absolute;
+
+  left: 15px;
+  right: 15px;
+
+  bottom: 0;
+
+  height: 330px;
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: center;
+}
+
+.urso-box img {
+  width: 380px;
+
+  margin-bottom: -60px;
+
+  object-fit: contain;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
+
+  .quadros-content {
+    margin-left: 250px;
+
+    padding-left: 25px;
+    padding-right: 20px;
+  }
+
+  .quadros-right {
+    width: 260px;
+
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .quadros-area {
+    grid-template-columns:
+      repeat(2, minmax(160px, 180px));
+
+    gap: 20px;
+  }
+
+  .quadro-card,
+  .novo-quadro-card {
+    width: 180px;
+  }
+
+  .quadro-menu {
+    right: 8px;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET PEQUENO
+========================================================= */
+
+@media (max-width: 850px) {
+
+  .quadros-right {
+    display: none;
+  }
+
+  .quadros-content {
+    margin-left: 250px;
+
+    padding-left: 25px;
+  }
+
+  .quadros-area {
+    grid-template-columns:
+      repeat(2, minmax(160px, 1fr));
+  }
+
+  .quadro-card,
+  .novo-quadro-card {
+    width: 100%;
+  }
+
+}
+
+
+/* =========================================================
+   CELULAR
+========================================================= */
+
+@media (max-width: 560px) {
+
+  .quadros-page {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+
+  /* -------------------------------------------------------
+     MENU LATERAL
+  ------------------------------------------------------- */
+
+  .menu-lateral-global {
+
+    width: 75px;
+    min-width: 75px;
+
+    margin-left: 10px;
+
+    padding-left: 8px;
+    padding-right: 8px;
+
+  }
+
+
+  /* LOGO */
+
+  .menu-lateral-global-logo {
+    width: 60px;
+
+    margin-bottom: 23px;
+  }
+
+  .menu-lateral-global-logo img {
+    width: 60px;
+  }
+
+
+  /* AVATAR */
+
+  .menu-lateral-global-avatar {
+    width: 48px;
+    height: 48px;
+  }
+
+
+  .menu-lateral-global-perfil {
+    margin-bottom: 15px;
+  }
+
+
+  /* MENU */
+
+  .menu-lateral-global-nav {
+    margin-top: 20px;
+  }
+
+
+  .menu-lateral-global-item {
+    justify-content: center;
+
+    padding: 0;
+  }
+
+
+  .menu-lateral-global-item span {
+    display: none;
+  }
+
+
+  /* LOGOUT */
+
+  .menu-lateral-global-footer {
+    left: 50%;
+
+    transform: translateX(-50%);
+  }
+
+  .menu-lateral-global-logout {
+    justify-content: center;
+  }
+
+  .menu-lateral-global-logout span {
+    display: none;
+  }
+
+
+  /* -------------------------------------------------------
+     CONTEÚDO
+  ------------------------------------------------------- */
+
+  .quadros-content {
+
+    margin-left: 95px;
+
+    padding: 20px 15px;
+
+  }
+
+
+  .quadros-search {
+    width: 100%;
+  }
+
+
+  .quadros-area {
+    grid-template-columns: 1fr;
+  }
+
+
+  .quadro-card,
+  .novo-quadro-card {
+    width: 100%;
+  }
+
+
+  /* -------------------------------------------------------
+     MENU DE OPÇÕES NO CELULAR
+  ------------------------------------------------------- */
+
+  .quadro-menu {
+    top: 43px;
+    right: 8px;
+
+    width: 150px;
+  }
+
+  .quadro-menu-item {
+    min-height: 36px;
+
+    font-size: 11px;
+  }
+
+
+  /* -------------------------------------------------------
+     MODAL NO CELULAR
+  ------------------------------------------------------- */
+
+  .modal-quadro-overlay {
+    padding: 15px;
+  }
+
+  .modal-quadro {
+    max-height: calc(100vh - 30px);
+
+    padding: 23px 20px;
+  }
+
+  .modal-quadro-header h2 {
+    font-size: 19px;
+  }
+
+  .modal-quadro-acoes {
+    flex-direction: column-reverse;
+
+    width: 100%;
+  }
+
+  .modal-quadro-cancelar,
+  .modal-quadro-salvar {
+    width: 100%;
+  }
+
+}
+
