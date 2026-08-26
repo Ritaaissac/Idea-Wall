@@ -1,32 +1,24 @@
-import pymysql
+import os
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "mysql+pymysql://root:1234@localhost:3306/idea_wall"
+)
+
+engine = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True,
+    pool_recycle=3600
+)
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-def conectar():
-    return pymysql.connect(
-        host="localhost",
-        user="root",
-        password="1234",
-        database="idea_wall",
-        port=3306,
-        cursorclass=pymysql.cursors.DictCursor
-    )
-
-
-def salvar_quadro(titulo, descricao, icone, usuario_id):
-    conn = conectar()
-    cursor = conn.cursor()
-
-    sql = """
-    INSERT INTO quadros (titulo, descricao, icone, usuario_id)
-    VALUES (%s, %s, %s, %s)
-    """
-
-    cursor.execute(sql, (titulo, descricao, icone, usuario_id))
-
-    conn.commit()
-    quadro_id = cursor.lastrowid
-
-    cursor.close()
-    conn.close()
-
-    return quadro_id
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

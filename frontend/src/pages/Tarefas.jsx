@@ -9,121 +9,68 @@ import calendario from "../assets/img/calendario.png";
 import MenuLateral from "../components/MenuLateral";
 
 const COLUNAS = [
-  {
-    id: "a-fazer",
-    titulo: "A Fazer",
-    classe: "fazer",
-  },
-  {
-    id: "andamento",
-    titulo: "Em andamento",
-    classe: "andamento",
-  },
-  {
-    id: "concluido",
-    titulo: "Concluído",
-    classe: "concluido",
-  },
+  { id: "a-fazer", titulo: "A Fazer", classe: "fazer" },
+  { id: "andamento", titulo: "Em andamento", classe: "andamento" },
+  { id: "concluido", titulo: "Concluído", classe: "concluido" },
 ];
 
 export default function Tarefas() {
   const navigate = useNavigate();
   const { quadroId } = useParams();
   const location = useLocation();
+
   const [quadro, setQuadro] = useState(location.state?.quadro || null);
-  const chaveTarefas = `tarefas-${quadroId || "padrao"}`;
-
-  useEffect(() => {
-    if (quadro || !quadroId) return;
-
-    const token = localStorage.getItem("token")?.replace(/^"+|"+$/g, "").trim();
-
-    if (!token) return;
-
-    fetch(`http://127.0.0.1:8000/quadros/${quadroId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error("Quadro não encontrado");
-        return response.json();
-      })
-      .then((dados) => setQuadro(dados))
-      .catch((error) => console.error("Erro ao carregar quadro:", error));
-  }, [quadro, quadroId]);
-
-  const [tarefas, setTarefas] = useState(() => {
-    try {
-      const salvas = localStorage.getItem(chaveTarefas);
-
-      return salvas
-        ? JSON.parse(salvas)
-        : [];
-    } catch {
-      return [];
-    }
-  });
-
+  const [tarefas, setTarefas] = useState([]);
   const [tarefaArrastada, setTarefaArrastada] = useState(null);
-
   const [menuAberto, setMenuAberto] = useState(null);
-
   const [ordenacaoAberta, setOrdenacaoAberta] = useState(false);
-
   const [ordenarPor, setOrdenarPor] = useState("manual");
 
   const [modalAberto, setModalAberto] = useState(false);
-
   const [modoEdicao, setModoEdicao] = useState(false);
-
   const [tarefaEditando, setTarefaEditando] = useState(null);
-
   const [tituloTarefa, setTituloTarefa] = useState("");
-
   const [dataTarefa, setDataTarefa] = useState("");
 
+  const token = localStorage.getItem("token")?.replace(/^"+|"+$/g, "").trim();
+
+  // Carrega os dados do quadro se necessário
   useEffect(() => {
-    localStorage.setItem(chaveTarefas, JSON.stringify(tarefas));
-  }, [chaveTarefas, tarefas]);
-
-  function handleLogout() {
-    localStorage.removeItem("usuario");
-    localStorage.removeItem("token");
-    navigate("/login");
-  }
-
-  function buscarUsuario() {
-    try {
-      return JSON.parse(
-        localStorage.getItem("usuario") || "null"
-      );
-    } catch {
-      return null;
+    if (!token) {
+      navigate("/login");
+      return;
     }
-  }
 
-  const usuario = buscarUsuario();
-
-  function abrirPerfilComTeclado(event) {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      navigate("/perfil");
+    if (!quadro && quadroId) {
+      fetch(`http://127.0.0.1:8000/quadros/${quadroId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+        .then((dados) => setQuadro(dados))
+        .catch(() => navigate("/quadros"));
     }
-  }
+  }, [quadro, quadroId, token, navigate]);
+
+  // Carrega as tarefas do banco via API
+  useEffect(() => {
+    if (!token || !quadroId) return;
+
+    fetch(`http://127.0.0.1:8000/quadros/${quadroId}/tarefas`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => (res.ok ? res.json() : []))
+      .then((dados) => setTarefas(dados))
+      .catch((err) => console.error("Erro ao carregar tarefas:", err));
+  }, [quadroId, token]);
 
   /* =====================================================
-     DRAG AND DROP
+     DRAG AND DROP COM PERSISTÊNCIA NA API
      ===================================================== */
 
   function iniciarArraste(event, tarefa) {
     setTarefaArrastada(tarefa);
-
     event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData(
-      "text/plain",
-      String(tarefa.id)
-    );
+    event.dataTransfer.setData("text/plain", String(tarefa.id));
   }
 
   function permitirSoltar(event) {
@@ -131,23 +78,40 @@ export default function Tarefas() {
     event.dataTransfer.dropEffect = "move";
   }
 
-  function soltarTarefa(event, novoStatus) {
+  async function soltarTarefa(event, novoStatus) {
     event.preventDefault();
+    if (!tarefaArrastada || tarefaArrastada.status === novoStatus) return;
 
-    if (!tarefaArrastada) return;
+    const tarefaOriginal = tarefaArrastada;
 
-    setTarefas((tarefasAtuais) =>
-      tarefasAtuais.map((tarefa) =>
-        tarefa.id === tarefaArrastada.id
-          ? {
-              ...tarefa,
-              status: novoStatus,
-            }
-          : tarefa
-      )
+    // Atualização otimista na interface
+    setTarefas((prev) =>
+      prev.map((t) => (t.id === tarefaOriginal.id ? { ...t, status: novoStatus } : t))
     );
 
-    setTarefaArrastada(null);
+    try {
+      const res = await fetch(
+        `http://127.0.0.1:8000/quadros/${quadroId}/tarefas/${tarefaOriginal.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status: novoStatus }),
+        }
+      );
+
+      if (!res.ok) throw new Error("Erro ao atualizar status");
+    } catch (err) {
+      console.error(err);
+      // Reverte se a API falhar
+      setTarefas((prev) =>
+        prev.map((t) => (t.id === tarefaOriginal.id ? tarefaOriginal : t))
+      );
+    } finally {
+      setTarefaArrastada(null);
+    }
   }
 
   function finalizarArraste() {
@@ -155,24 +119,16 @@ export default function Tarefas() {
   }
 
   function ordenarTarefas(tarefasDaColuna) {
-    if (ordenarPor === "manual") {
-      return tarefasDaColuna;
-    }
+    if (ordenarPor === "manual") return tarefasDaColuna;
 
     return [...tarefasDaColuna].sort((tarefaA, tarefaB) => {
       if (ordenarPor === "alfabetica") {
-        return tarefaA.titulo.localeCompare(
-          tarefaB.titulo,
-          "pt-BR",
-          { sensitivity: "base" }
-        );
+        return tarefaA.titulo.localeCompare(tarefaB.titulo, "pt-BR", { sensitivity: "base" });
       }
-
       const [diaA, mesA] = (tarefaA.data || "").split("/").map(Number);
       const [diaB, mesB] = (tarefaB.data || "").split("/").map(Number);
       const dataA = mesA && diaA ? mesA * 100 + diaA : Infinity;
       const dataB = mesB && diaB ? mesB * 100 + diaB : Infinity;
-
       return dataA - dataB;
     });
   }
@@ -183,96 +139,99 @@ export default function Tarefas() {
   }
 
   /* =====================================================
-     CRIAR TAREFA
+     CRIAR / EDITAR TAREFA
      ===================================================== */
 
   function abrirModalCriar(status = "a-fazer") {
     setModoEdicao(false);
-
-    setTarefaEditando({
-      status,
-    });
-
+    setTarefaEditando({ status });
     setTituloTarefa("");
     setDataTarefa("");
-
     setMenuAberto(null);
     setModalAberto(true);
   }
-
-  /* =====================================================
-     EDITAR TAREFA
-     ===================================================== */
 
   function abrirModalEditar(tarefa) {
     setModoEdicao(true);
-
     setTarefaEditando(tarefa);
-
     setTituloTarefa(tarefa.titulo);
     setDataTarefa(tarefa.data || "");
-
     setMenuAberto(null);
     setModalAberto(true);
   }
 
-  /* =====================================================
-     SALVAR TAREFA
-     ===================================================== */
-
-  function salvarTarefa(event) {
+  async function salvarTarefa(event) {
     event.preventDefault();
-
-    if (!tituloTarefa.trim()) {
-      return;
-    }
+    if (!tituloTarefa.trim()) return;
 
     if (modoEdicao && tarefaEditando) {
-      setTarefas((tarefasAtuais) =>
-        tarefasAtuais.map((tarefa) =>
-          tarefa.id === tarefaEditando.id
-            ? {
-                ...tarefa,
-                titulo: tituloTarefa.trim(),
-                data: dataTarefa,
-              }
-            : tarefa
-        )
-      );
-    } else {
-      const novaTarefa = {
-        id: Date.now(),
-        titulo: tituloTarefa.trim(),
-        data: dataTarefa,
-        status: tarefaEditando?.status || "a-fazer",
-      };
+      try {
+        const res = await fetch(
+          `http://127.0.0.1:8000/quadros/${quadroId}/tarefas/${tarefaEditando.id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              titulo: tituloTarefa.trim(),
+              data: dataTarefa.trim(),
+            }),
+          }
+        );
 
-      setTarefas((tarefasAtuais) => [
-        ...tarefasAtuais,
-        novaTarefa,
-      ]);
+        if (res.ok) {
+          const atualizada = await res.json();
+          setTarefas((prev) =>
+            prev.map((t) => (t.id === atualizada.id ? atualizada : t))
+          );
+        }
+      } catch (err) {
+        console.error("Erro ao editar tarefa:", err);
+      }
+    } else {
+      try {
+        const res = await fetch(`http://127.0.0.1:8000/quadros/${quadroId}/tarefas`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            titulo: tituloTarefa.trim(),
+            data: dataTarefa.trim(),
+            status: tarefaEditando?.status || "a-fazer",
+          }),
+        });
+
+        if (res.ok) {
+          const nova = await res.json();
+          setTarefas((prev) => [...prev, nova]);
+        }
+      } catch (err) {
+        console.error("Erro ao criar tarefa:", err);
+      }
     }
 
     fecharModal();
   }
 
-  /* =====================================================
-     EXCLUIR TAREFA
-     ===================================================== */
+  async function excluirTarefa(id) {
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/quadros/${quadroId}/tarefas/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-  function excluirTarefa(id) {
-    setTarefas((tarefasAtuais) =>
-      tarefasAtuais.filter(
-        (tarefa) => tarefa.id !== id
-      )
-    );
-
+      if (res.ok) {
+        setTarefas((prev) => prev.filter((t) => t.id !== id));
+      }
+    } catch (err) {
+      console.error("Erro ao excluir tarefa:", err);
+    }
     setMenuAberto(null);
   }
-
-  /* =====================================================
-     MODAL
-     ===================================================== */
 
   function fecharModal() {
     setModalAberto(false);
@@ -285,34 +244,24 @@ export default function Tarefas() {
   return (
     <div
       className="tarefas-page"
-      style={{
-        backgroundImage: `url(${fundo})`,
-      }}
+      style={{ backgroundImage: `url(${fundo})` }}
       onClick={() => setMenuAberto(null)}
     >
-      {/* =================================================
-          SIDEBAR
-          ================================================= */}
-
       <MenuLateral />
-
-      {/* =================================================
-          CONTEÚDO PRINCIPAL
-          ================================================= */}
 
       <main className="tarefas-content">
         <header className="tarefas-header">
           <div className="titulo-quadro">
             <input
               type="text"
-              defaultValue={quadro?.titulo || "Nome do quadro"}
+              readOnly
+              value={quadro?.titulo || "Carregando..."}
               aria-label="Nome do quadro"
             />
-
             <span className="linha-titulo"></span>
           </div>
 
-          <div className="ordenar-container" onClick={(event) => event.stopPropagation()}>
+          <div className="ordenar-container" onClick={(e) => e.stopPropagation()}>
             <button
               type="button"
               className="botao-ordenar"
@@ -320,8 +269,7 @@ export default function Tarefas() {
               aria-expanded={ordenacaoAberta}
               aria-haspopup="menu"
             >
-              Ordenar
-              <span>⌄</span>
+              Ordenar <span>⌄</span>
             </button>
 
             {ordenacaoAberta && (
@@ -337,16 +285,10 @@ export default function Tarefas() {
           </div>
         </header>
 
-        {/* =================================================
-            KANBAN
-            ================================================= */}
-
         <section className="kanban">
           {COLUNAS.map((coluna) => {
             const tarefasDaColuna = ordenarTarefas(
-              tarefas.filter(
-                (tarefa) => tarefa.status === coluna.id
-              )
+              tarefas.filter((tarefa) => tarefa.status === coluna.id)
             );
 
             return (
@@ -354,15 +296,8 @@ export default function Tarefas() {
                 key={coluna.id}
                 className={`kanban-coluna ${coluna.classe}`}
                 onDragOver={permitirSoltar}
-                onDrop={(event) =>
-                  soltarTarefa(
-                    event,
-                    coluna.id
-                  )
-                }
+                onDrop={(event) => soltarTarefa(event, coluna.id)}
               >
-                {/* Cabeçalho da coluna */}
-
                 <div className="coluna-header">
                   <div className="coluna-titulo">
                     <span className="status-dot"></span>
@@ -370,114 +305,69 @@ export default function Tarefas() {
                   </div>
                 </div>
 
-                {/* Tarefas */}
-
                 <div className="lista-tarefas">
-                  {tarefasDaColuna.map(
-                    (tarefa) => (
-                      <div
-                        key={tarefa.id}
-                        className={`tarefa-card ${
-                          tarefaArrastada?.id ===
-                          tarefa.id
-                            ? "arrastando"
-                            : ""
-                        }`}
-                        draggable
-                        onDragStart={(event) =>
-                          iniciarArraste(
-                            event,
-                            tarefa
-                          )
-                        }
-                        onDragEnd={
-                          finalizarArraste
-                        }
-                      >
-                        <div className="tarefa-topo">
-                          <div className="tarefa-info">
-                            <span className="tarefa-radio"></span>
-
-                            <span className="tarefa-titulo">
-                              {tarefa.titulo}
-                            </span>
-                          </div>
-
-                          {/* MENU DOS 3 PONTOS */}
-
-                          <div
-                            className="tarefa-menu-container"
-                            onClick={(event) =>
-                              event.stopPropagation()
-                            }
-                          >
-                            <button
-                              type="button"
-                              className="tarefa-menu-btn"
-                              onClick={() =>
-                                setMenuAberto(
-                                  menuAberto ===
-                                    tarefa.id
-                                    ? null
-                                    : tarefa.id
-                                )
-                              }
-                              aria-label="Opções da tarefa"
-                            >
-                              •••
-                            </button>
-
-                            {menuAberto ===
-                              tarefa.id && (
-                              <div className="tarefa-menu">
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    abrirModalEditar(
-                                      tarefa
-                                    )
-                                  }
-                                >
-                                  ✎ Editar
-                                </button>
-
-                                <button
-                                  type="button"
-                                  className="excluir"
-                                  onClick={() =>
-                                    excluirTarefa(
-                                      tarefa.id
-                                    )
-                                  }
-                                >
-                                  🗑 Excluir
-                                </button>
-                              </div>
-                            )}
-                          </div>
+                  {tarefasDaColuna.map((tarefa) => (
+                    <div
+                      key={tarefa.id}
+                      className={`tarefa-card ${
+                        tarefaArrastada?.id === tarefa.id ? "arrastando" : ""
+                      }`}
+                      draggable
+                      onDragStart={(event) => iniciarArraste(event, tarefa)}
+                      onDragEnd={finalizarArraste}
+                    >
+                      <div className="tarefa-topo">
+                        <div className="tarefa-info">
+                          <span className="tarefa-radio"></span>
+                          <span className="tarefa-titulo">{tarefa.titulo}</span>
                         </div>
 
-                        {tarefa.data && (
-                          <div className="tarefa-data">
-                            <img src={calendario} alt="" />
-                            {tarefa.data}
-                          </div>
-                        )}
-                      </div>
-                    )
-                  )}
-                </div>
+                        <div
+                          className="tarefa-menu-container"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <button
+                            type="button"
+                            className="tarefa-menu-btn"
+                            onClick={() =>
+                              setMenuAberto(menuAberto === tarefa.id ? null : tarefa.id)
+                            }
+                            aria-label="Opções da tarefa"
+                          >
+                            •••
+                          </button>
 
-                {/* Adicionar tarefa */}
+                          {menuAberto === tarefa.id && (
+                            <div className="tarefa-menu">
+                              <button type="button" onClick={() => abrirModalEditar(tarefa)}>
+                                ✎ Editar
+                              </button>
+                              <button
+                                type="button"
+                                className="excluir"
+                                onClick={() => excluirTarefa(tarefa.id)}
+                              >
+                                🗑 Excluir
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {tarefa.data && (
+                        <div className="tarefa-data">
+                          <img src={calendario} alt="" />
+                          {tarefa.data}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
 
                 <button
                   type="button"
                   className="adicionar-tarefa"
-                  onClick={() =>
-                    abrirModalCriar(
-                      coluna.id
-                    )
-                  }
+                  onClick={() => abrirModalCriar(coluna.id)}
                 >
                   Adicionar tarefa +
                 </button>
@@ -488,38 +378,16 @@ export default function Tarefas() {
 
         <p className="dica-kanban">
           <img src={lampada} alt="" />
-          Dica: arraste as tarefas entre as colunas
-          para atualizar o status.
+          Dica: arraste as tarefas entre as colunas para atualizar o status.
         </p>
       </main>
 
-      {/* =================================================
-          MODAL CRIAR / EDITAR
-          ================================================= */}
-
       {modalAberto && (
-        <div
-          className="modal-overlay"
-          onClick={fecharModal}
-        >
-          <div
-            className="modal-tarefa"
-            onClick={(event) =>
-              event.stopPropagation()
-            }
-          >
+        <div className="modal-overlay" onClick={fecharModal}>
+          <div className="modal-tarefa" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>
-                {modoEdicao
-                  ? "Editar tarefa"
-                  : "Nova tarefa"}
-              </h2>
-
-              <button
-                type="button"
-                className="modal-fechar"
-                onClick={fecharModal}
-              >
+              <h2>{modoEdicao ? "Editar tarefa" : "Nova tarefa"}</h2>
+              <button type="button" className="modal-fechar" onClick={fecharModal}>
                 ×
               </button>
             </div>
@@ -530,11 +398,7 @@ export default function Tarefas() {
                 <input
                   type="text"
                   value={tituloTarefa}
-                  onChange={(event) =>
-                    setTituloTarefa(
-                      event.target.value
-                    )
-                  }
+                  onChange={(e) => setTituloTarefa(e.target.value)}
                   placeholder="Digite o nome da tarefa"
                   autoFocus
                 />
@@ -545,31 +409,17 @@ export default function Tarefas() {
                 <input
                   type="text"
                   value={dataTarefa}
-                  onChange={(event) =>
-                    setDataTarefa(
-                      event.target.value
-                    )
-                  }
+                  onChange={(e) => setDataTarefa(e.target.value)}
                   placeholder="Ex.: 23/07"
                 />
               </label>
 
               <div className="modal-acoes">
-                <button
-                  type="button"
-                  className="botao-cancelar"
-                  onClick={fecharModal}
-                >
+                <button type="button" className="botao-cancelar" onClick={fecharModal}>
                   Cancelar
                 </button>
-
-                <button
-                  type="submit"
-                  className="botao-salvar"
-                >
-                  {modoEdicao
-                    ? "Salvar alterações"
-                    : "Adicionar tarefa"}
+                <button type="submit" className="botao-salvar">
+                  {modoEdicao ? "Salvar alterações" : "Adicionar tarefa"}
                 </button>
               </div>
             </form>

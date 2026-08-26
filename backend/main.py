@@ -3,8 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from routes.auth import router as auth_router
 from routes.quadros import router as quadros_router
+from routes.tarefas import router as tarefas_router
 
-app = FastAPI()
+app = FastAPI(title="Idea Wall API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -19,3 +20,4 @@ app.add_middleware(
 
 app.include_router(auth_router)
 app.include_router(quadros_router)
+app.include_router(tarefas_router)
