@@ -6,6 +6,7 @@ import "../styles/tarefas.css";
 import fundo from "../assets/img/fundo.png";
 import lampada from "../assets/img/lampada.png";
 import calendario from "../assets/img/calendario.png";
+import seta from "../assets/img/icons/icon7.png";
 import MenuLateral from "../components/MenuLateral";
 
 const COLUNAS = [
@@ -269,7 +270,7 @@ export default function Tarefas() {
               aria-expanded={ordenacaoAberta}
               aria-haspopup="menu"
             >
-              Ordenar <span>⌄</span>
+              Ordenar <span>↑↓</span>
             </button>
 
             {ordenacaoAberta && (
