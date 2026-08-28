@@ -4,7 +4,7 @@ from passlib.context import CryptContext
 from jose import jwt
 from datetime import datetime, timedelta
 
-from models.usuario import UsuarioCadastro, UsuarioLogin, AlterarSenha
+from models.usuario import UsuarioCadastro, UsuarioLogin, AlterarSenha, AtualizarFoto
 from models.db_models import Usuario
 from database import get_db
 
@@ -86,3 +86,19 @@ def alterar_senha(dados: AlterarSenha, db: Session = Depends(get_db)):
     db.commit()
 
     return {"mensagem": "Senha alterada com sucesso!"}
+
+
+@router.put("/atualizar-foto")
+def atualizar_foto(dados: AtualizarFoto, db: Session = Depends(get_db)):
+    usuario = db.query(Usuario).filter(Usuario.email == dados.email.strip()).first()
+
+    if not usuario:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Usuário não encontrado."
+        )
+
+    usuario.foto = dados.foto
+    db.commit()
+
+    return {"mensagem": "Foto de perfil atualizada com sucesso!"}

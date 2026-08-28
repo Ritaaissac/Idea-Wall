@@ -113,8 +113,9 @@ html, body, #root, .hero {
 .hero .cards .card span {
     margin-top: 10px;
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 600;
     color: #222;
+   
 }
 
 .hero button {

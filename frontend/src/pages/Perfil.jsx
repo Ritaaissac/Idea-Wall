@@ -13,44 +13,22 @@ import iconeSenha from "../assets/img/icons/icon2.png";
 import iconeDados from "../assets/img/icons/icon3.png";
 import iconeQuadros from "../assets/img/folha.png";
 import iconeTarefas from "../assets/img/lampada.png";
-import iconeAlterarSenha from "../assets/img/icons/icon6.png";
 
-// =====================================
-// AVATARES DE PERFIL
-// =====================================
-// Os arquivos estão em:
-// src/assets/img/icons_perfil/
-// 1.png, 2.png, 3.png ... 25.png
+const arquivosIcones = import.meta.glob("../assets/img/icons_perfil/*.png", {
+  eager: true,
+  query: "?url",
+  import: "default",
+});
 
-const arquivosIcones = import.meta.glob(
-  "../assets/img/icons_perfil/*.png",
-  {
-    eager: true,
-    query: "?url",
-    import: "default",
-  }
-);
-
-// Cria a lista com os 25 avatares
 const iconesPerfil = Array.from(
   { length: 25 },
-  (_, index) =>
-    arquivosIcones[
-      `../assets/img/icons_perfil/${index + 1}.png`
-    ]
+  (_, index) => arquivosIcones[`../assets/img/icons_perfil/${index + 1}.png`]
 );
 
-// Avatar padrão = 1.png
-const avatarPadrao =
-  arquivosIcones["../assets/img/icons_perfil/1.png"];
-
+const avatarPadrao = arquivosIcones["../assets/img/icons_perfil/1.png"];
 
 export default function Perfil() {
   const navigate = useNavigate();
-
-  // =====================================
-  // USUÁRIO
-  // =====================================
 
   const [usuario, setUsuario] = useState({
     nome: "",
@@ -60,9 +38,7 @@ export default function Perfil() {
   });
 
   const [mostrarIcones, setMostrarIcones] = useState(false);
-  const [mostrarSenha, setMostrarSenha] = useState(false);
 
-  // Alteração de senha
   const [mostrarAlterarSenha, setMostrarAlterarSenha] = useState(false);
   const [senhaAtual, setSenhaAtual] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
@@ -72,64 +48,51 @@ export default function Perfil() {
   const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState(false);
   const [alterandoSenha, setAlterandoSenha] = useState(false);
 
-
-  // =====================================
-  // CARREGAR USUÁRIO
-  // =====================================
-
   useEffect(() => {
     const dadosUsuario = localStorage.getItem("usuario");
 
     if (dadosUsuario) {
       const usuarioSalvo = JSON.parse(dadosUsuario);
 
-      // Se o usuário ainda não possui foto,
-      // utiliza automaticamente o avatar 1.png
       if (!usuarioSalvo.foto) {
         usuarioSalvo.foto = avatarPadrao;
 
-        localStorage.setItem(
-          "usuario",
-          JSON.stringify(usuarioSalvo)
-        );
+        localStorage.setItem("usuario", JSON.stringify(usuarioSalvo));
       }
 
       setUsuario(usuarioSalvo);
-
     } else {
       navigate("/cadastro");
     }
-
   }, [navigate]);
 
+  async function selecionarIcone(icone) {
+    const usuarioAtualizado = {
+      ...usuario,
+      foto: icone,
+    };
 
-  // =====================================
-  // SELECIONAR FOTO DE PERFIL
-  // =====================================
+    setUsuario(usuarioAtualizado);
+    localStorage.setItem("usuario", JSON.stringify(usuarioAtualizado));
 
-  function selecionarIcone(icone) {
-  const usuarioAtualizado = {
-    ...usuario,
-    foto: icone,
-  };
+    window.dispatchEvent(new Event("usuarioAtualizado"));
+    setMostrarIcones(false);
 
-  setUsuario(usuarioAtualizado);
-
-  localStorage.setItem(
-    "usuario",
-    JSON.stringify(usuarioAtualizado)
-  );
-
-  // AVISA O MenuLateral imediatamente
-  window.dispatchEvent(new Event("usuarioAtualizado"));
-
-  setMostrarIcones(false);
-}
-
-
-  // =====================================
-  // ALTERAR SENHA
-  // =====================================
+    try {
+      await fetch("http://127.0.0.1:8000/atualizar-foto", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: usuario.email,
+          foto: icone,
+        }),
+      });
+    } catch (error) {
+      console.error("Erro ao salvar foto no servidor:", error);
+    }
+  }
 
   async function handleAlterarSenha(e) {
     e.preventDefault();
@@ -157,20 +120,17 @@ export default function Perfil() {
     setAlterandoSenha(true);
 
     try {
-      const response = await fetch(
-        "http://127.0.0.1:8000/alterar-senha",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: usuario.email,
-            senha_atual: senhaAtual,
-            nova_senha: novaSenha,
-          }),
-        }
-      );
+      const response = await fetch("http://127.0.0.1:8000/alterar-senha", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: usuario.email,
+          senha_atual: senhaAtual,
+          nova_senha: novaSenha,
+        }),
+      });
 
       const data = await response.json();
 
@@ -208,17 +168,6 @@ export default function Perfil() {
     setMostrarAlterarSenha(false);
   }
 
-
-  // =====================================
-  // LOGOUT
-  // =====================================
-
-  function handleLogout() {
-    localStorage.removeItem("usuario");
-    navigate("/login");
-  }
-
-
   return (
     <div
       className="pagina-perfil"
@@ -226,380 +175,169 @@ export default function Perfil() {
         backgroundImage: `url(${fundo})`,
       }}
     >
-
-      {/* =====================================
-          MENU LATERAL
-      ====================================== */}
-
       <MenuLateral />
 
-
-      {/* =====================================
-          CONTEÚDO
-      ====================================== */}
-
       <main className="conteudo-perfil">
-
         <div className="perfil-container">
-
-
-          {/* TÍTULO */}
-
           <div className="titulo-perfil">
-
-
             <h1>
               Meu <span>Perfil</span>
             </h1>
-
           </div>
 
-
           <div className="perfil-grid">
-
-
-            {/* =====================================
-                DADOS DO USUÁRIO
-            ====================================== */}
-
             <section className="dados-usuario">
-
-
-              {/* FOTO */}
-
               <div className="foto-container">
-
                 <button
                   className="foto-perfil"
-                  onClick={() =>
-                    setMostrarIcones(true)
-                  }
+                  onClick={() => setMostrarIcones(true)}
                   title="Alterar foto de perfil"
                 >
-
                   <img
-                    src={
-                      usuario.foto ||
-                      avatarPadrao
-                    }
+                    src={usuario.foto || avatarPadrao}
                     alt="Foto de perfil"
                   />
-
                 </button>
-
-
-                {/* BOTÃO EDITAR */}
 
                 <button
                   className="editar-foto"
-                  onClick={() =>
-                    setMostrarIcones(true)
-                  }
+                  onClick={() => setMostrarIcones(true)}
                   title="Alterar foto"
                 >
                   ✎
                 </button>
 
-
-                {/* =====================================
-                    SELEÇÃO DOS AVATARES
-                ====================================== */}
-
                 {mostrarIcones && (
-
                   <div className="seletor-icones">
-
                     <div className="seletor-icones-card">
-
-
-                      {/* FECHAR */}
-
                       <button
                         className="fechar-icones"
-                        onClick={() =>
-                          setMostrarIcones(false)
-                        }
+                        onClick={() => setMostrarIcones(false)}
                       >
                         ×
                       </button>
 
-
-                      <h2>
-                        Escolha seu avatar
-                      </h2>
-
-
-                      <p>
-                        Escolha uma foto para seu perfil
-                      </p>
-
-
-                      {/* 25 AVATARES */}
+                      <h2>Escolha seu avatar</h2>
+                      <p>Escolha uma foto para seu perfil</p>
 
                       <div className="lista-icones">
+                        {iconesPerfil.map((icone, index) => {
+                          if (!icone) return null;
 
-                        {iconesPerfil.map(
-                          (icone, index) => {
-
-                            // Evita erro caso algum
-                            // arquivo não exista
-                            if (!icone) {
-                              return null;
-                            }
-
-                            return (
-
-                              <button
-                                key={index}
-                                className={`icone-opcao ${
-                                  usuario.foto === icone
-                                    ? "selecionado"
-                                    : ""
-                                }`}
-                                onClick={() =>
-                                  selecionarIcone(icone)
-                                }
-                              >
-
-                                <img
-                                  src={icone}
-                                  alt={`Avatar ${
-                                    index + 1
-                                  }`}
-                                />
-
-                              </button>
-
-                            );
-                          }
-                        )}
-
+                          return (
+                            <button
+                              key={index}
+                              className={`icone-opcao ${
+                                usuario.foto === icone ? "selecionado" : ""
+                              }`}
+                              onClick={() => selecionarIcone(icone)}
+                            >
+                              <img src={icone} alt={`Avatar ${index + 1}`} />
+                            </button>
+                          );
+                        })}
                       </div>
-
                     </div>
-
                   </div>
-
                 )}
-
               </div>
 
-
-              {/* =====================================
-                  NOME
-              ====================================== */}
-
               <div className="campo">
-
-                <label>
-                  Nome
-                </label>
-
+                <label>Nome</label>
                 <div className="input-perfil">
-
-                  <img
-                    src={iconeNome}
-                    alt=""
-                    className="icone-campo-nome"
-                  />
-
-                  <p>
-                    {usuario.nome ||
-                      "Nome não informado"}
-                  </p>
-
+                  <img src={iconeNome} alt="" className="icone-campo-nome" />
+                  <p>{usuario.nome || "Nome não informado"}</p>
                 </div>
-
               </div>
 
-
-              {/* =====================================
-                  EMAIL
-              ====================================== */}
-
               <div className="campo">
-
-                <label>
-                  Email
-                </label>
-
+                <label>Email</label>
                 <div className="input-perfil">
-
-                  <img
-                    src={iconeEmail}
-                    alt=""
-                    className="icone-campo-email"
-                  />
-
-                  <p>
-                    {usuario.email ||
-                      "Email não informado"}
-                  </p>
-
+                  <img src={iconeEmail} alt="" className="icone-campo-email" />
+                  <p>{usuario.email || "Email não informado"}</p>
                 </div>
-
               </div>
 
-
-              {/* =====================================
-                  SENHA
-              ====================================== */}
-
               <div className="campo">
-
-                <label>
-                  Senha
-                </label>
-
+                <label>Senha</label>
                 <div className="input-perfil senha-perfil">
-
-                  <img
-                    src={iconeSenha}
-                    alt=""
-                    className="icone-campo-senha"
-                  />
-
-                  <p className="senha-mascarada">
-                    Senha protegida
-                  </p>
-
-
+                  <img src={iconeSenha} alt="" className="icone-campo-senha" />
+                  <p className="senha-mascarada">Senha protegida</p>
                 </div>
 
                 <button
                   type="button"
                   className="botao-alterar-senha"
                   onClick={() => setMostrarAlterarSenha(true)}
-                > <text>Alterar senha</text>
+                >
+                  <text>Alterar senha</text>
                 </button>
-
               </div>
-
-
             </section>
 
-
-            {/* =====================================
-                LADO DIREITO
-            ====================================== */}
-
             <section className="lado-direito">
-
-
-              {/* BALÃO */}
-
               <div className="fala">
-              <img src="src/assets/img/fala_urso.png" alt="" className="fala-urso"/>
+                <img
+                  src="src/assets/img/fala_urso.png"
+                  alt=""
+                  className="fala-urso"
+                />
                 <p>
-
                   Olá, eu sou o Bear! Bem-vindo
                   <br />
-
                   à sua plataforma de organização
                   <br />
-
                   pessoal e profissional. Crie, organize
                   <br />
-
-                   e conclua suas tarefas com mais
+                  e conclua suas tarefas com mais
                   <br />
-
-                   planejamento no IDEA WALL.
+                  planejamento no IDEA WALL.
                   <br />
                 </p>
-
               </div>
 
-
-              {/* =====================================
-                  CARD DADOS
-              ====================================== */}
-
               <div className="card-dados">
-
-
                 <div className="titulo-dados">
-
                   <img
                     src={iconeDados}
                     alt=""
                     className="icone-dados-titulo"
                   />
-
-                  <h2>
-                    Dados
-                  </h2>
-
+                  <h2>Dados</h2>
                 </div>
 
-
-                {/* QUADROS */}
-
                 <div className="estatistica">
-
                   <img
                     src={iconeQuadros}
                     alt=""
                     className="icone-estatistica"
                   />
-
                   <div>
-
-                    <strong>
-                      12
-                    </strong>
-
-                    <p>
-                      Quadros criados
-                    </p>
-
+                    <strong>12</strong>
+                    <p>Quadros criados</p>
                   </div>
-
                 </div>
 
-
-                {/* TAREFAS */}
-
                 <div className="estatistica">
-
                   <img
                     src={iconeTarefas}
                     alt=""
                     className="icone-estatistica"
                   />
-
                   <div>
-
-                    <strong>
-                      8
-                    </strong>
-
-                    <p>
-                      Tarefas salvas
-                    </p>
-
+                    <strong>8</strong>
+                    <p>Tarefas salvas</p>
                   </div>
-
                 </div>
-
               </div>
-
-
-              {/* URSO */}
 
               <img
                 src={urso}
                 alt="Urso do Idea Wall"
                 className="urso-perfil"
               />
-
             </section>
-
           </div>
-
-          {/* =====================================
-              MODAL - ALTERAR SENHA
-          ====================================== */}
 
           {mostrarAlterarSenha && (
             <div
@@ -611,7 +349,6 @@ export default function Perfil() {
               }}
             >
               <div className="modal-senha">
-
                 <button
                   type="button"
                   className="fechar-modal-senha"
@@ -623,7 +360,11 @@ export default function Perfil() {
                 </button>
 
                 <div className="icone-modal-senha">
-                  <img src="src/assets/img/icons/icon2.png" alt="" className="icone-modal" />
+                  <img
+                    src="src/assets/img/icons/icon2.png"
+                    alt=""
+                    className="icone-modal"
+                  />
                 </div>
 
                 <h2>Alterar senha</h2>
@@ -633,10 +374,8 @@ export default function Perfil() {
                 </p>
 
                 <form onSubmit={handleAlterarSenha}>
-
                   <div className="campo-senha-modal">
                     <label>Senha atual</label>
-
                     <div className="input-senha-modal">
                       <input
                         type={mostrarSenhaAtual ? "text" : "password"}
@@ -651,13 +390,9 @@ export default function Perfil() {
                       <button
                         type="button"
                         className="olho-modal"
-                        onClick={() =>
-                          setMostrarSenhaAtual(!mostrarSenhaAtual)
-                        }
+                        onClick={() => setMostrarSenhaAtual(!mostrarSenhaAtual)}
                         title={
-                          mostrarSenhaAtual
-                            ? "Ocultar senha"
-                            : "Mostrar senha"
+                          mostrarSenhaAtual ? "Ocultar senha" : "Mostrar senha"
                         }
                       >
                         {mostrarSenhaAtual ? "◉" : "◌"}
@@ -667,7 +402,6 @@ export default function Perfil() {
 
                   <div className="campo-senha-modal">
                     <label>Nova senha</label>
-
                     <div className="input-senha-modal">
                       <input
                         type={mostrarNovaSenha ? "text" : "password"}
@@ -682,13 +416,9 @@ export default function Perfil() {
                       <button
                         type="button"
                         className="olho-modal"
-                        onClick={() =>
-                          setMostrarNovaSenha(!mostrarNovaSenha)
-                        }
+                        onClick={() => setMostrarNovaSenha(!mostrarNovaSenha)}
                         title={
-                          mostrarNovaSenha
-                            ? "Ocultar senha"
-                            : "Mostrar senha"
+                          mostrarNovaSenha ? "Ocultar senha" : "Mostrar senha"
                         }
                       >
                         {mostrarNovaSenha ? "◉" : "◌"}
@@ -698,16 +428,11 @@ export default function Perfil() {
 
                   <div className="campo-senha-modal">
                     <label>Confirmar nova senha</label>
-
                     <div className="input-senha-modal">
                       <input
-                        type={
-                          mostrarConfirmarSenha ? "text" : "password"
-                        }
+                        type={mostrarConfirmarSenha ? "text" : "password"}
                         value={confirmarSenha}
-                        onChange={(e) =>
-                          setConfirmarSenha(e.target.value)
-                        }
+                        onChange={(e) => setConfirmarSenha(e.target.value)}
                         placeholder="Digite novamente a nova senha"
                         autoComplete="new-password"
                         disabled={alterandoSenha}
@@ -718,9 +443,7 @@ export default function Perfil() {
                         type="button"
                         className="olho-modal"
                         onClick={() =>
-                          setMostrarConfirmarSenha(
-                            !mostrarConfirmarSenha
-                          )
+                          setMostrarConfirmarSenha(!mostrarConfirmarSenha)
                         }
                         title={
                           mostrarConfirmarSenha
@@ -748,21 +471,15 @@ export default function Perfil() {
                       className="salvar-senha"
                       disabled={alterandoSenha}
                     >
-                      {alterandoSenha
-                        ? "Alterando..."
-                        : "Salvar nova senha"}
+                      {alterandoSenha ? "Alterando..." : "Salvar nova senha"}
                     </button>
                   </div>
-
                 </form>
               </div>
             </div>
           )}
-
         </div>
-
       </main>
-
     </div>
   );
 }

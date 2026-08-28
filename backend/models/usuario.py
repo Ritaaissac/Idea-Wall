@@ -1,15 +1,19 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 class UsuarioCadastro(BaseModel):
     nome: str
-    email: str
+    email: EmailStr
     senha: str
 
 class UsuarioLogin(BaseModel):
-    email: str
+    email: EmailStr
     senha: str
 
 class AlterarSenha(BaseModel):
-    email: str
+    email: EmailStr
     senha_atual: str
     nova_senha: str
+
+class AtualizarFoto(BaseModel):
+    email: EmailStr
+    foto: str
