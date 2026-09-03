@@ -1,5 +1,4 @@
 import React from "react";
-
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Home from "./pages/Home";
@@ -17,7 +16,10 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        {/* Rotas Públicas */}
+        <Route
+          path="/"
+          element={<Home />}
+        />
 
         <Route
           path="/login"
@@ -29,22 +31,11 @@ function App() {
           element={<Cadastro />}
         />
 
-
-        {/* Rotas Protegidas */}
         <Route
           path="/quadros"
           element={
             <ProtectedRoute>
               <Quadros />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Home />
             </ProtectedRoute>
           }
         />
@@ -76,12 +67,9 @@ function App() {
           }
         />
 
-
-        {/* Redirecionamento padrão */}
-
         <Route
           path="*"
-          element={<Navigate to="/login" replace />}
+          element={<Navigate to="/" replace />}
         />
 
       </Routes>
