@@ -7,7 +7,7 @@ from models.db_models import Usuario, Quadro, Tarefa
 from database import get_db
 from routes.quadros import obter_usuario_logado
 
-router = APIRouter(prefix="/quadros/{quadro_id}/tarefas", tags=["Tarefas"])
+router = APIRouter(prefix="/quadros/tarefas", tags=["Tarefas"])
 
 
 def verificar_acesso_quadro(quadro_id: int, usuario_id: int, db: Session) -> Quadro:
@@ -51,7 +51,7 @@ def criar_tarefa(
     return nova_tarefa
 
 
-@router.put("/{tarefa_id}")
+@router.put("")
 def editar_tarefa(
     quadro_id: int,
     tarefa_id: int,
@@ -80,7 +80,7 @@ def editar_tarefa(
     return tarefa
 
 
-@router.delete("/{tarefa_id}")
+@router.delete("")
 def excluir_tarefa(
     quadro_id: int,
     tarefa_id: int,

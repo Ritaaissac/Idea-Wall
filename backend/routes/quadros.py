@@ -71,7 +71,7 @@ def listar_quadros(
     )
 
 
-@router.get("/{quadro_id}")
+@router.get("")
 def buscar_quadro(
     quadro_id: int,
     usuario_atual: Usuario = Depends(obter_usuario_logado),
@@ -90,7 +90,7 @@ def buscar_quadro(
     return quadro
 
 
-@router.put("/{quadro_id}")
+@router.put("")
 def editar_quadro(
     quadro_id: int,
     quadro_in: QuadroCriar,
@@ -117,7 +117,7 @@ def editar_quadro(
     return quadro
 
 
-@router.delete("/{quadro_id}")
+@router.delete("")
 def excluir_quadro(
     quadro_id: int,
     usuario_atual: Usuario = Depends(obter_usuario_logado),
