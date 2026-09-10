@@ -7,7 +7,7 @@ from models.db_models import Usuario, Quadro, Tarefa
 from database import get_db
 from routes.quadros import obter_usuario_logado
 
-router = APIRouter(prefix="/quadros/tarefas", tags=["Tarefas"])
+router = APIRouter(prefix="/quadros", tags=["Tarefas"])
 
 
 def verificar_acesso_quadro(quadro_id: int, usuario_id: int, db: Session) -> Quadro:
@@ -20,7 +20,7 @@ def verificar_acesso_quadro(quadro_id: int, usuario_id: int, db: Session) -> Qua
     return quadro
 
 
-@router.get("")
+@router.get("/{quadro_id}/tarefas")
 def listar_tarefas(
     quadro_id: int,
     usuario_atual: Usuario = Depends(obter_usuario_logado),
@@ -30,7 +30,7 @@ def listar_tarefas(
     return db.query(Tarefa).filter(Tarefa.quadro_id == quadro_id).all()
 
 
-@router.post("", status_code=status.HTTP_201_CREATED)
+@router.post("/{quadro_id}/tarefas", status_code=status.HTTP_201_CREATED)
 def criar_tarefa(
     quadro_id: int,
     tarefa_in: TarefaCriar,
@@ -51,7 +51,7 @@ def criar_tarefa(
     return nova_tarefa
 
 
-@router.put("")
+@router.put("/{quadro_id}/tarefas/{tarefa_id}")
 def editar_tarefa(
     quadro_id: int,
     tarefa_id: int,
@@ -80,7 +80,7 @@ def editar_tarefa(
     return tarefa
 
 
-@router.delete("")
+@router.delete("/{quadro_id}/tarefas/{tarefa_id}")
 def excluir_tarefa(
     quadro_id: int,
     tarefa_id: int,

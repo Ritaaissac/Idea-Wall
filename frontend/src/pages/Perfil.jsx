@@ -37,6 +37,11 @@ export default function Perfil() {
     foto: avatarPadrao,
   });
 
+  const [estatisticas, setEstatisticas] = useState({
+  quadros: 0,
+  tarefas: 0,
+});
+
   const [mostrarIcones, setMostrarIcones] = useState(false);
 
   const [mostrarAlterarSenha, setMostrarAlterarSenha] = useState(false);
@@ -49,22 +54,54 @@ export default function Perfil() {
   const [alterandoSenha, setAlterandoSenha] = useState(false);
 
   useEffect(() => {
-    const dadosUsuario = localStorage.getItem("usuario");
+  const dadosUsuario = localStorage.getItem("usuario");
+  const token =
+    localStorage.getItem("access_token") ||
+    localStorage.getItem("token");
 
-    if (dadosUsuario) {
-      const usuarioSalvo = JSON.parse(dadosUsuario);
+  if (!dadosUsuario || !token) {
+    navigate("/login");
+    return;
+  }
 
-      if (!usuarioSalvo.foto) {
-        usuarioSalvo.foto = avatarPadrao;
+  const usuarioSalvo = JSON.parse(dadosUsuario);
 
-        localStorage.setItem("usuario", JSON.stringify(usuarioSalvo));
+  if (!usuarioSalvo.foto) {
+    usuarioSalvo.foto = avatarPadrao;
+    localStorage.setItem("usuario", JSON.stringify(usuarioSalvo));
+  }
+
+  setUsuario(usuarioSalvo);
+
+  async function carregarEstatisticas() {
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:8000/quadros/estatisticas",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao buscar estatísticas");
       }
 
-      setUsuario(usuarioSalvo);
-    } else {
-      navigate("/cadastro");
+      const data = await response.json();
+
+      setEstatisticas({
+        quadros: data.quadros,
+        tarefas: data.tarefas,
+      });
+    } catch (error) {
+      console.error("Erro ao carregar estatísticas:", error);
     }
-  }, [navigate]);
+  }
+
+  carregarEstatisticas();
+}, [navigate]);
 
   async function selecionarIcone(icone) {
     const usuarioAtualizado = {
@@ -313,7 +350,7 @@ export default function Perfil() {
                     className="icone-estatistica"
                   />
                   <div>
-                    <strong>12</strong>
+                    <strong>{estatisticas.quadros}</strong>
                     <p>Quadros criados</p>
                   </div>
                 </div>
@@ -325,8 +362,8 @@ export default function Perfil() {
                     className="icone-estatistica"
                   />
                   <div>
-                    <strong>8</strong>
-                    <p>Tarefas salvas</p>
+                    <strong>{estatisticas.tarefas}</strong>
+  <p>Tarefas salvas</p>
                   </div>
                 </div>
               </div>

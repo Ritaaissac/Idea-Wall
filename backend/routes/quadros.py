@@ -4,7 +4,7 @@ from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 
 from models.quadro import QuadroCriar
-from models.db_models import Usuario, Quadro
+from models.db_models import Usuario, Quadro, Tarefa
 from database import get_db
 from routes.auth import SECRET_KEY
 
@@ -70,8 +70,31 @@ def listar_quadros(
         .all()
     )
 
+@router.get("/estatisticas")
+def estatisticas_usuario(
+    usuario_atual: Usuario = Depends(obter_usuario_logado),
+    db: Session = Depends(get_db)
+):
+    quantidade_quadros = (
+        db.query(Quadro)
+        .filter(Quadro.usuario_id == usuario_atual.id)
+        .count()
+    )
 
-@router.get("")
+    quantidade_tarefas = (
+        db.query(Tarefa)
+        .join(Quadro, Tarefa.quadro_id == Quadro.id)
+        .filter(Quadro.usuario_id == usuario_atual.id)
+        .count()
+    )
+
+    return {
+        "quadros": quantidade_quadros,
+        "tarefas": quantidade_tarefas
+    }
+
+
+@router.get("/{quadro_id}")
 def buscar_quadro(
     quadro_id: int,
     usuario_atual: Usuario = Depends(obter_usuario_logado),
@@ -117,7 +140,7 @@ def editar_quadro(
     return quadro
 
 
-@router.delete("")
+@router.delete("/{quadro_id}")
 def excluir_quadro(
     quadro_id: int,
     usuario_atual: Usuario = Depends(obter_usuario_logado),
