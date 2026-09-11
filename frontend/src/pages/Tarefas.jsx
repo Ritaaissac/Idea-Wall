@@ -64,9 +64,6 @@ export default function Tarefas() {
       .catch((err) => console.error("Erro ao carregar tarefas:", err));
   }, [quadroId, token]);
 
-  /* =====================================================
-     DRAG AND DROP COM PERSISTÊNCIA NA API
-     ===================================================== */
 
   function iniciarArraste(event, tarefa) {
     setTarefaArrastada(tarefa);
@@ -124,14 +121,76 @@ export default function Tarefas() {
 
     return [...tarefasDaColuna].sort((tarefaA, tarefaB) => {
       if (ordenarPor === "alfabetica") {
-        return tarefaA.titulo.localeCompare(tarefaB.titulo, "pt-BR", { sensitivity: "base" });
+        return tarefaA.titulo.localeCompare(
+          tarefaB.titulo,
+          "pt-BR",
+          { sensitivity: "base" }
+        );
       }
-      const [diaA, mesA] = (tarefaA.data || "").split("/").map(Number);
-      const [diaB, mesB] = (tarefaB.data || "").split("/").map(Number);
-      const dataA = mesA && diaA ? mesA * 100 + diaA : Infinity;
-      const dataB = mesB && diaB ? mesB * 100 + diaB : Infinity;
+
+      const dataA = tarefaA.data
+        ? new Date(`${tarefaA.data}T00:00:00`).getTime()
+        : Infinity;
+
+      const dataB = tarefaB.data
+        ? new Date(`${tarefaB.data}T00:00:00`).getTime()
+        : Infinity;
+
       return dataA - dataB;
     });
+  }
+
+  function formatarData(data) {
+    if (!data) return "";
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(data)) {
+      const [ano, mes, dia] = data.split("-");
+      return `${dia}/${mes}/${ano}`;
+    }
+
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(data)) {
+      return data;
+    }
+
+    return "";
+  }
+
+  function normalizarDataParaInput(data) {
+    if (!data) return "";
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(data)) {
+      return data;
+    }
+
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(data)) {
+      const [dia, mes, ano] = data.split("/");
+      return `${ano}-${mes}-${dia}`;
+    }
+
+    return "";
+  }
+
+  function dataValida(data) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(data)) {
+      return false;
+    }
+
+    const [ano, mes, dia] = data.split("-").map(Number);
+    const dataObj = new Date(ano, mes - 1, dia);
+
+    if (
+      dataObj.getFullYear() !== ano ||
+      dataObj.getMonth() !== mes - 1 ||
+      dataObj.getDate() !== dia
+    ) {
+      return false;
+    }
+
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    dataObj.setHours(0, 0, 0, 0);
+
+    return dataObj >= hoje;
   }
 
   function selecionarOrdenacao(opcao) {
@@ -139,61 +198,114 @@ export default function Tarefas() {
     setOrdenacaoAberta(false);
   }
 
-  /* =====================================================
-     CRIAR / EDITAR TAREFA
-     ===================================================== */
+  function obterDataHoje() {
+  const hoje = new Date();
+  const ano = hoje.getFullYear();
+  const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+  const dia = String(hoje.getDate()).padStart(2, "0");
+
+  return `${ano}-${mes}-${dia}`;
+  }
 
   function abrirModalCriar(status = "a-fazer") {
-    setModoEdicao(false);
-    setTarefaEditando({ status });
-    setTituloTarefa("");
-    setDataTarefa("");
-    setMenuAberto(null);
-    setModalAberto(true);
+  setModoEdicao(false);
+  setTarefaEditando({ status });
+  setTituloTarefa("");
+  setDataTarefa("");
+  setMenuAberto(null);
+  setModalAberto(true);
   }
 
   function abrirModalEditar(tarefa) {
-    setModoEdicao(true);
-    setTarefaEditando(tarefa);
-    setTituloTarefa(tarefa.titulo);
-    setDataTarefa(tarefa.data || "");
-    setMenuAberto(null);
-    setModalAberto(true);
+  setModoEdicao(true);
+  setTarefaEditando(tarefa);
+  setTituloTarefa(tarefa.titulo);
+
+  let data = tarefa.data || "";
+
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(data)) {
+    const [dia, mes, ano] = data.split("/");
+    data = `${ano}-${mes}-${dia}`;
+  }
+
+  setDataTarefa(data);
+  setMenuAberto(null);
+  setModalAberto(true);
   }
 
   async function salvarTarefa(event) {
-    event.preventDefault();
-    if (!tituloTarefa.trim()) return;
+  event.preventDefault();
 
-    if (modoEdicao && tarefaEditando) {
-      try {
-        const res = await fetch(
-          `http://127.0.0.1:8000/quadros/${quadroId}/tarefas/${tarefaEditando.id}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              titulo: tituloTarefa.trim(),
-              data: dataTarefa.trim(),
-            }),
-          }
+  if (!tituloTarefa.trim()) {
+    return;
+  }
+
+    if (!dataTarefa) {
+      alert("Selecione uma data no calendário.");
+      return;
+    }
+
+    if (!dataValida(dataTarefa)) {
+      const partes = dataTarefa.split("-");
+
+      if (partes.length === 3) {
+        const [ano, mes, dia] = partes.map(Number);
+        const selecionada = new Date(ano, mes - 1, dia);
+        const hoje = new Date();
+
+        hoje.setHours(0, 0, 0, 0);
+        selecionada.setHours(0, 0, 0, 0);
+
+        if (selecionada < hoje) {
+          alert("Não é permitido escolher uma data que já passou.");
+          return;
+        }
+      }
+
+      alert("Data inválida. Selecione uma data válida no calendário.");
+      return;
+    }
+
+  if (modoEdicao && tarefaEditando) {
+    try {
+      const res = await fetch(
+        `http://127.0.0.1:8000/quadros/${quadroId}/tarefas/${tarefaEditando.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            titulo: tituloTarefa.trim(),
+            data: dataTarefa,
+          }),
+        }
+      );
+
+      if (res.ok) {
+        const atualizada = await res.json();
+
+        setTarefas((prev) =>
+          prev.map((t) =>
+            t.id === atualizada.id ? atualizada : t
+          )
         );
 
-        if (res.ok) {
-          const atualizada = await res.json();
-          setTarefas((prev) =>
-            prev.map((t) => (t.id === atualizada.id ? atualizada : t))
-          );
-        }
-      } catch (err) {
-        console.error("Erro ao editar tarefa:", err);
+        fecharModal();
+      } else {
+        const erro = await res.json();
+        alert(erro.detail || "Não foi possível editar a tarefa.");
       }
-    } else {
-      try {
-        const res = await fetch(`http://127.0.0.1:8000/quadros/${quadroId}/tarefas`, {
+    } catch (err) {
+      console.error("Erro ao editar tarefa:", err);
+      alert("Erro ao editar tarefa.");
+    }
+  } else {
+    try {
+      const res = await fetch(
+        `http://127.0.0.1:8000/quadros/${quadroId}/tarefas`,
+        {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -201,23 +313,28 @@ export default function Tarefas() {
           },
           body: JSON.stringify({
             titulo: tituloTarefa.trim(),
-            data: dataTarefa.trim(),
+            data: dataTarefa,
             status: tarefaEditando?.status || "a-fazer",
           }),
-        });
-
-        if (res.ok) {
-          const nova = await res.json();
-          setTarefas((prev) => [...prev, nova]);
         }
-      } catch (err) {
-        console.error("Erro ao criar tarefa:", err);
+      );
+
+      if (res.ok) {
+        const nova = await res.json();
+
+        setTarefas((prev) => [...prev, nova]);
+
+        fecharModal();
+      } else {
+        const erro = await res.json();
+        alert(erro.detail || "Não foi possível criar a tarefa.");
       }
+    } catch (err) {
+      console.error("Erro ao criar tarefa:", err);
+      alert("Erro ao criar tarefa.");
     }
-
-    fecharModal();
   }
-
+}
   async function excluirTarefa(id) {
     try {
       const res = await fetch(`http://127.0.0.1:8000/quadros/${quadroId}/tarefas/${id}`, {
@@ -358,7 +475,7 @@ export default function Tarefas() {
                       {tarefa.data && (
                         <div className="tarefa-data">
                           <img src={calendario} alt="" />
-                          {tarefa.data}
+                          {formatarData(tarefa.data)}
                         </div>
                       )}
                     </div>
@@ -408,10 +525,10 @@ export default function Tarefas() {
               <label>
                 Data
                 <input
-                  type="text"
+                  type="date"
+                    min={obterDataHoje()}
                   value={dataTarefa}
                   onChange={(e) => setDataTarefa(e.target.value)}
-                  placeholder="Ex.: 23/07"
                 />
               </label>
 

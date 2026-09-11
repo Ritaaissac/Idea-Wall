@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends, status
 from sqlalchemy.orm import Session
-from typing import List
+from datetime import datetime
 
 from models.tarefa import TarefaCriar, TarefaEditar
 from models.db_models import Usuario, Quadro, Tarefa
@@ -11,13 +11,38 @@ router = APIRouter(prefix="/quadros", tags=["Tarefas"])
 
 
 def verificar_acesso_quadro(quadro_id: int, usuario_id: int, db: Session) -> Quadro:
-    quadro = db.query(Quadro).filter(Quadro.id == quadro_id, Quadro.usuario_id == usuario_id).first()
+    quadro = db.query(Quadro).filter(
+        Quadro.id == quadro_id,
+        Quadro.usuario_id == usuario_id
+    ).first()
+
     if not quadro:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Quadro não encontrado ou sem permissão de acesso."
         )
+
     return quadro
+
+
+def validar_data(data):
+    if not data or not data.strip():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="A data da tarefa é obrigatória."
+        )
+
+    data = data.strip()
+
+    try:
+        datetime.strptime(data, "%Y-%m-%d")
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Data inválida. Escolha uma data válida no calendário."
+        )
+
+    return data
 
 
 @router.get("/{quadro_id}/tarefas")
@@ -27,7 +52,10 @@ def listar_tarefas(
     db: Session = Depends(get_db)
 ):
     verificar_acesso_quadro(quadro_id, usuario_atual.id, db)
-    return db.query(Tarefa).filter(Tarefa.quadro_id == quadro_id).all()
+
+    return db.query(Tarefa).filter(
+        Tarefa.quadro_id == quadro_id
+    ).all()
 
 
 @router.post("/{quadro_id}/tarefas", status_code=status.HTTP_201_CREATED)
@@ -39,15 +67,19 @@ def criar_tarefa(
 ):
     verificar_acesso_quadro(quadro_id, usuario_atual.id, db)
 
+    data_validada = validar_data(tarefa_in.data)
+
     nova_tarefa = Tarefa(
         titulo=tarefa_in.titulo.strip(),
-        data=(tarefa_in.data or "").strip(),
+        data=data_validada,
         status=tarefa_in.status or "a-fazer",
         quadro_id=quadro_id
     )
+
     db.add(nova_tarefa)
     db.commit()
     db.refresh(nova_tarefa)
+
     return nova_tarefa
 
 
@@ -61,7 +93,11 @@ def editar_tarefa(
 ):
     verificar_acesso_quadro(quadro_id, usuario_atual.id, db)
 
-    tarefa = db.query(Tarefa).filter(Tarefa.id == tarefa_id, Tarefa.quadro_id == quadro_id).first()
+    tarefa = db.query(Tarefa).filter(
+        Tarefa.id == tarefa_id,
+        Tarefa.quadro_id == quadro_id
+    ).first()
+
     if not tarefa:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -70,13 +106,16 @@ def editar_tarefa(
 
     if tarefa_in.titulo is not None:
         tarefa.titulo = tarefa_in.titulo.strip()
+
     if tarefa_in.data is not None:
-        tarefa.data = tarefa_in.data.strip()
+        tarefa.data = validar_data(tarefa_in.data)
+
     if tarefa_in.status is not None:
         tarefa.status = tarefa_in.status
 
     db.commit()
     db.refresh(tarefa)
+
     return tarefa
 
 
@@ -89,7 +128,11 @@ def excluir_tarefa(
 ):
     verificar_acesso_quadro(quadro_id, usuario_atual.id, db)
 
-    tarefa = db.query(Tarefa).filter(Tarefa.id == tarefa_id, Tarefa.quadro_id == quadro_id).first()
+    tarefa = db.query(Tarefa).filter(
+        Tarefa.id == tarefa_id,
+        Tarefa.quadro_id == quadro_id
+    ).first()
+
     if not tarefa:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -98,4 +141,5 @@ def excluir_tarefa(
 
     db.delete(tarefa)
     db.commit()
+
     return {"mensagem": "Tarefa excluída com sucesso!"}
