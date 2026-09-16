@@ -1,16 +1,22 @@
 from fastapi import APIRouter, HTTPException, Depends, status
 from sqlalchemy.orm import Session
 from datetime import datetime
+import unicodedata
 
 from models.tarefa import TarefaCriar, TarefaEditar
 from models.db_models import Usuario, Quadro, Tarefa
 from database import get_db
 from routes.quadros import obter_usuario_logado
 
+
 router = APIRouter(prefix="/quadros", tags=["Tarefas"])
 
 
-def verificar_acesso_quadro(quadro_id: int, usuario_id: int, db: Session) -> Quadro:
+def verificar_acesso_quadro(
+    quadro_id: int,
+    usuario_id: int,
+    db: Session
+) -> Quadro:
     quadro = db.query(Quadro).filter(
         Quadro.id == quadro_id,
         Quadro.usuario_id == usuario_id
@@ -45,34 +51,88 @@ def validar_data(data):
     return data
 
 
+def normalizar_status(status_tarefa):
+    if not status_tarefa:
+        return "a-fazer"
+
+    status_tarefa = status_tarefa.strip().lower()
+
+    status_tarefa = unicodedata.normalize(
+        "NFD",
+        status_tarefa
+    ).encode(
+        "ascii",
+        "ignore"
+    ).decode("ascii")
+
+    status_tarefa = status_tarefa.replace("_", "-")
+    status_tarefa = status_tarefa.replace(" ", "-")
+
+    status_tarefa = "-".join(
+        parte for parte in status_tarefa.split("-") if parte
+    )
+
+    if status_tarefa == "a-fazer":
+        return "a-fazer"
+
+    if status_tarefa in [
+        "andamento",
+        "em-andamento"
+    ]:
+        return "em-andamento"
+
+    if status_tarefa in [
+        "concluido",
+        "concluida"
+    ]:
+        return "concluido"
+
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="Status inválido."
+    )
+
+
 @router.get("/{quadro_id}/tarefas")
 def listar_tarefas(
     quadro_id: int,
     usuario_atual: Usuario = Depends(obter_usuario_logado),
     db: Session = Depends(get_db)
 ):
-    verificar_acesso_quadro(quadro_id, usuario_atual.id, db)
+    verificar_acesso_quadro(
+        quadro_id,
+        usuario_atual.id,
+        db
+    )
 
     return db.query(Tarefa).filter(
         Tarefa.quadro_id == quadro_id
     ).all()
 
 
-@router.post("/{quadro_id}/tarefas", status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/{quadro_id}/tarefas",
+    status_code=status.HTTP_201_CREATED
+)
 def criar_tarefa(
     quadro_id: int,
     tarefa_in: TarefaCriar,
     usuario_atual: Usuario = Depends(obter_usuario_logado),
     db: Session = Depends(get_db)
 ):
-    verificar_acesso_quadro(quadro_id, usuario_atual.id, db)
+    verificar_acesso_quadro(
+        quadro_id,
+        usuario_atual.id,
+        db
+    )
 
     data_validada = validar_data(tarefa_in.data)
+    status_validado = normalizar_status(tarefa_in.status)
 
     nova_tarefa = Tarefa(
         titulo=tarefa_in.titulo.strip(),
         data=data_validada,
-        status=tarefa_in.status or "a-fazer",
+        status=status_validado,
         quadro_id=quadro_id
     )
 
@@ -91,7 +151,11 @@ def editar_tarefa(
     usuario_atual: Usuario = Depends(obter_usuario_logado),
     db: Session = Depends(get_db)
 ):
-    verificar_acesso_quadro(quadro_id, usuario_atual.id, db)
+    verificar_acesso_quadro(
+        quadro_id,
+        usuario_atual.id,
+        db
+    )
 
     tarefa = db.query(Tarefa).filter(
         Tarefa.id == tarefa_id,
@@ -111,7 +175,7 @@ def editar_tarefa(
         tarefa.data = validar_data(tarefa_in.data)
 
     if tarefa_in.status is not None:
-        tarefa.status = tarefa_in.status
+        tarefa.status = normalizar_status(tarefa_in.status)
 
     db.commit()
     db.refresh(tarefa)
@@ -126,7 +190,11 @@ def excluir_tarefa(
     usuario_atual: Usuario = Depends(obter_usuario_logado),
     db: Session = Depends(get_db)
 ):
-    verificar_acesso_quadro(quadro_id, usuario_atual.id, db)
+    verificar_acesso_quadro(
+        quadro_id,
+        usuario_atual.id,
+        db
+    )
 
     tarefa = db.query(Tarefa).filter(
         Tarefa.id == tarefa_id,
@@ -142,4 +210,6 @@ def excluir_tarefa(
     db.delete(tarefa)
     db.commit()
 
-    return {"mensagem": "Tarefa excluída com sucesso!"}
+    return {
+        "mensagem": "Tarefa excluída com sucesso!"
+    }

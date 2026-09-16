@@ -11,7 +11,7 @@ import MenuLateral from "../components/MenuLateral";
 
 const COLUNAS = [
   { id: "a-fazer", titulo: "A Fazer", classe: "fazer" },
-  { id: "andamento", titulo: "Em andamento", classe: "andamento" },
+  { id: "em-andamento", titulo: "Em andamento", classe: "andamento" },
   { id: "concluido", titulo: "Concluído", classe: "concluido" },
 ];
 
