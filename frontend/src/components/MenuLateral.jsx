@@ -95,14 +95,19 @@ useEffect(() => {
           LOGO
       ================================================= */}
 
-      <div className="menu-lateral-global-logo">
+      <button
+        type="button"
+        className="menu-lateral-global-logo"
+        onClick={() => navigate("/dashboard")}
+        title="Ir para o Dashboard"
+      >
 
         <img
           src={logo}
           alt="Logo Idea Wall"
         />
 
-      </div>
+      </button>
 
 
       {/* =================================================
@@ -133,7 +138,6 @@ useEffect(() => {
       ================================================= */}
 
       <nav className="menu-lateral-global-nav">
-
 
         {/* =================================================
             QUADROS

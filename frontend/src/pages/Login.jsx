@@ -31,7 +31,7 @@ export default function Login() {
       if (response.ok) {
         localStorage.setItem("token", data.access_token);
         localStorage.setItem("usuario", JSON.stringify(data.usuario));
-        navigate("/perfil");
+        navigate("/dashboard");
       } else {
         alert(data.detail || "Erro ao fazer login. Verifique suas credenciais.");
       }

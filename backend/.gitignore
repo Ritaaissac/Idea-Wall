@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.env.*
+
+# Ambiente virtual
+env/
+venv/
+
+# Node / frontend
+node_modules/
+frontend/dist/
+.vite/
+
+# Arquivos locais
+requisitos.zip
+.DS_Store
+Thumbs.db

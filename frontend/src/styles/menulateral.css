@@ -7,9 +7,9 @@
   width: 200px;
   min-width: 220px;
 
-  height: calc(100vh - 38px);
+  height: calc(100vh - 90px);
 
-  margin: 19px 0 19px 20px;
+  margin: 45px 0 45px 20px;
 
   background: linear-gradient(
     180deg,
@@ -44,6 +44,14 @@
 .menu-lateral-global-logo {
 
   width: 150px;
+
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+
+  cursor: pointer;
 
   display: flex;
   flex-direction: column;
