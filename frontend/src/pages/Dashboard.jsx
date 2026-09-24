@@ -19,13 +19,13 @@ import urso from "../assets/img/urso 6.png";
 
 
 const SEMANA = [
-  "Su",
-  "Mo",
-  "Tu",
-  "We",
-  "Th",
-  "Fr",
-  "Sa"
+  "Dom",
+  "Seg",
+  "Ter",
+  "Qua",
+  "Qui",
+  "Sex",
+  "Sáb"
 ];
 
 

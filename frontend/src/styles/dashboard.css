@@ -234,6 +234,7 @@
   justify-content: space-between;
 
   margin-bottom: 5px;
+ 
 }
 
 
@@ -245,7 +246,7 @@
 
   font-size:
     clamp(
-      16px,
+      32px,
       1.6vw,
       23px
     );
@@ -264,7 +265,7 @@
     "Poppins",
     sans-serif;
 
-  font-size: 9px;
+  font-size: 14px;
 
   font-weight: 500;
 
@@ -311,7 +312,7 @@
 
 .calendar-weekdays {
 
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 
   color:
     rgba(
@@ -323,7 +324,7 @@
 
   font-size:
     clamp(
-      8px,
+      22px,
       1vw,
       15px
     );
@@ -349,7 +350,7 @@
 
   font-size:
     clamp(
-      9px,
+      22px,
       1vw,
       15px
     );
@@ -428,7 +429,9 @@
 
   flex-direction: column;
 
-  justify-content: flex-end;
+  justify-content: flex-end; 
+
+
 
   padding:
     9px
@@ -468,12 +471,14 @@
       transparent 0,
       transparent 25px,
       rgba(
-        71,
+        79,
         32,
-        173,
+        183,
         0.18
       ) 26px
     );
+
+  
 }
 
 
@@ -488,6 +493,7 @@
   align-items: flex-end;
 
   justify-content: center;
+  
 }
 
 
@@ -510,7 +516,7 @@
     0
     0;
 
-  background: #fff493;
+  background: #f8f2ae;
 
   transition:
     height
@@ -521,21 +527,22 @@
 
 .chart-bar:first-child {
 
-  background: #fffdf0;
+  background: #fdfdfa;
 }
+
 
 
 .chart-bar i {
 
   position: absolute;
 
-  top: -15px;
+  top: -19px;
 
   left: 50%;
 
   color: #fff;
 
-  font-size: 8px;
+  font-size: 12px;
 
   font-style: normal;
 
@@ -556,15 +563,15 @@
       1fr
     );
 
-  gap: 5px;
+  gap: 9px;
 
   padding-top: 5px;
 
-  color: #382069;
+  color: #dfdfdf;
 
   font-size:
     clamp(
-      7px,
+      12px,
       0.8vw,
       12px
     );
@@ -622,14 +629,14 @@
     clamp(
       22px,
       2.5vw,
-      34px
+      24px
     );
 
   height:
     clamp(
       22px,
       2.5vw,
-      34px
+      24px
     );
 
   flex:
@@ -659,7 +666,7 @@
 .dashboard-tasks li button:hover {
 
   transform:
-    scale(1.06);
+    scale(1.01);
 }
 
 
@@ -703,7 +710,7 @@ button svg {
     clamp(
       13px,
       1.4vw,
-      20px
+      15px
     );
 
   height:
