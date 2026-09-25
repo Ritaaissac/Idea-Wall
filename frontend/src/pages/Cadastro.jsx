@@ -23,6 +23,7 @@ export default function Cadastro() {
     }
 
     try {
+      // TODO: Levar a URL base abaixo (até a barra) para um arquivo .env, por exemplo, que não suba para o GitHub
       const response = await fetch("http://127.0.0.1:8000/cadastro", {
         method: "POST",
         headers: {
@@ -34,6 +35,7 @@ export default function Cadastro() {
       const data = await response.json();
 
       if (response.ok) {
+        // TODO: Evitar o uso de alerts. Exibam os erros na tela em vermelho, por exemplo.
         alert("Cadastro realizado com sucesso!");
         navigate("/login");
       } else {

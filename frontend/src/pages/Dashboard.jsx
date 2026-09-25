@@ -722,7 +722,7 @@ export default function Dashboard() {
         >
 
           <span>
-            Tur<em>b</em>ine e organize suas tarefas com a gente!
+            Turbine e organize suas tarefas com a gente!
           </span>
 
 

@@ -128,7 +128,7 @@
 
   margin-bottom: 19px;
 
-  font-size: 9px;
+  font-size: 12px;
 }
 
 
@@ -138,9 +138,9 @@
 
   font-size:
     clamp(
-      20px,
+      30px,
       2.3vw,
-      34px
+      44px
     );
 
   line-height: 1;
@@ -153,7 +153,7 @@
 
   font-size:
     clamp(
-      10px,
+      15px,
       1vw,
       15px
     );
@@ -170,11 +170,7 @@
 
   transform: translateY(-50%);
 
-  width: clamp(180px, 24vw, 300px);
-
-  height: clamp(180px, 24vw, 300px);
-
-  max-height: none;
+  width: 300px;
 
   object-fit: contain;
 }
@@ -777,7 +773,9 @@ span {
     0
     25px;
 
-  font-size: 11px;
+  font-size: 18px;
+
+  height: 200px ;
 }
 
 
@@ -801,9 +799,9 @@ span {
 
 .dashboard-footer button {
 
-  width: 28px;
+  width: 48px;
 
-  height: 28px;
+  height: 48px;
 
   display: grid;
 
@@ -835,9 +833,9 @@ span {
 
 .dashboard-footer button svg {
 
-  width: 16px;
+  width: 22px;
 
-  height: 16px;
+  height: 22px;
 }
 
 
