@@ -29,6 +29,7 @@ const avatarPadrao = arquivosIcones["../assets/img/icons_perfil/1.png"];
 
 export default function Perfil() {
   const navigate = useNavigate();
+  const [mensagem, setMensagem] = useState({ texto: "", tipo: "" });
 
   const [usuario, setUsuario] = useState({
     nome: "",
@@ -135,22 +136,22 @@ export default function Perfil() {
     e.preventDefault();
 
     if (!senhaAtual || !novaSenha || !confirmarSenha) {
-      alert("Preencha todos os campos.");
+      setMensagem({ texto: "Preencha todos os campos.", tipo: "erro" });
       return;
     }
 
     if (novaSenha !== confirmarSenha) {
-      alert("A nova senha e a confirmação não coincidem.");
+      setMensagem({ texto: "A nova senha e a confirmação não coincidem.", tipo: "erro" });
       return;
     }
 
     if (novaSenha.length < 6) {
-      alert("A nova senha deve ter pelo menos 6 caracteres.");
+      setMensagem({ texto: "A nova senha deve ter pelo menos 6 caracteres.", tipo: "erro" });
       return;
     }
 
     if (senhaAtual === novaSenha) {
-      alert("A nova senha deve ser diferente da senha atual.");
+      setMensagem({ texto: "A nova senha deve ser diferente da senha atual.", tipo: "erro" });
       return;
     }
 
@@ -172,11 +173,11 @@ export default function Perfil() {
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.detail || "Não foi possível alterar a senha.");
+        setMensagem({ texto: data.detail || "Não foi possível alterar a senha.", tipo: "erro" });
         return;
       }
 
-      alert("Senha alterada com sucesso!");
+      setMensagem({ texto: "Senha alterada com sucesso!", tipo: "sucesso" });
 
       setSenhaAtual("");
       setNovaSenha("");
@@ -187,7 +188,7 @@ export default function Perfil() {
       setMostrarAlterarSenha(false);
     } catch (error) {
       console.error("Erro ao alterar senha:", error);
-      alert("Não foi possível conectar ao servidor.");
+      setMensagem({ texto: "Não foi possível conectar ao servidor.", tipo: "erro" });
     } finally {
       setAlterandoSenha(false);
     }
@@ -196,6 +197,7 @@ export default function Perfil() {
   function fecharAlterarSenha() {
     if (alterandoSenha) return;
 
+    setMensagem({ texto: "", tipo: "" });
     setSenhaAtual("");
     setNovaSenha("");
     setConfirmarSenha("");
@@ -305,7 +307,7 @@ export default function Perfil() {
                 <button
                   type="button"
                   className="botao-alterar-senha"
-                  onClick={() => setMostrarAlterarSenha(true)}
+                  onClick={() => { setMensagem({ texto: "", tipo: "" }); setMostrarAlterarSenha(true); }}
                 >
                   <text>Alterar senha</text>
                 </button>
@@ -409,6 +411,12 @@ export default function Perfil() {
                 <p className="descricao-modal-senha">
                   Digite sua senha atual e escolha uma nova senha.
                 </p>
+
+                {mensagem.texto && (
+                  <div role="alert" style={{ color: mensagem.tipo === "sucesso" ? "#2e7d32" : "#c62828", background: mensagem.tipo === "sucesso" ? "#e8f5e9" : "#ffebee", padding: "10px 14px", borderRadius: "10px", marginBottom: "12px", textAlign: "center", fontSize: "14px" }}>
+                    {mensagem.texto}
+                  </div>
+                )}
 
                 <form onSubmit={handleAlterarSenha}>
                   <div className="campo-senha-modal">

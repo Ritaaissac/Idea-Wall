@@ -78,6 +78,7 @@ function IconeQuadro({ tipo }) {
 export default function Quadros() {
 
   const navigate = useNavigate();
+  const [mensagem, setMensagem] = useState({ texto: "", tipo: "" });
 
   const [quadros, setQuadros] = useState([]);
   const [carregando, setCarregando] = useState(true);
@@ -357,6 +358,7 @@ export default function Quadros() {
 
     setMenuAberto(null);
 
+    setMensagem({ texto: "", tipo: "" });
     setQuadroEditando(quadro);
 
     setDadosEdicao({
@@ -382,7 +384,7 @@ export default function Quadros() {
     e.preventDefault();
 
     if (!dadosEdicao.titulo.trim()) {
-      alert("Digite um título para o quadro.");
+      setMensagem({ texto: "Digite um título para o quadro.", tipo: "erro" });
       return;
     }
 
@@ -445,10 +447,10 @@ export default function Quadros() {
     } catch (error) {
       console.error("Erro ao editar quadro:", error);
 
-      alert(
-        error.message ||
-        "Não foi possível editar o quadro."
-      );
+      setMensagem({
+        texto: error.message || "Não foi possível editar o quadro.",
+        tipo: "erro",
+      });
 
     } finally {
       setSalvandoEdicao(false);
@@ -514,10 +516,10 @@ export default function Quadros() {
     } catch (error) {
       console.error("Erro ao excluir quadro:", error);
 
-      alert(
-        error.message ||
-        "Não foi possível excluir o quadro."
-      );
+      setMensagem({
+        texto: error.message || "Não foi possível excluir o quadro.",
+        tipo: "erro",
+      });
     }
   }
 
@@ -784,6 +786,12 @@ export default function Quadros() {
               </div>
 
             </div>
+
+            {mensagem.texto && (
+              <div role="alert" style={{ color: "#c62828", background: "#ffebee", padding: "10px 14px", borderRadius: "10px", marginBottom: "12px", textAlign: "center", fontSize: "14px" }}>
+                {mensagem.texto}
+              </div>
+            )}
 
             <form onSubmit={salvarEdicao}>
 

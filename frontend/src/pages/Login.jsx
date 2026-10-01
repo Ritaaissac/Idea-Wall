@@ -7,6 +7,7 @@ import fundo from "../assets/img/fundo.png";
 
 export default function Login() {
   const navigate = useNavigate();
+  const [mensagem, setMensagem] = useState({ texto: "", tipo: "" });
 
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -33,11 +34,11 @@ export default function Login() {
         localStorage.setItem("usuario", JSON.stringify(data.usuario));
         navigate("/dashboard");
       } else {
-        alert(data.detail || "Erro ao fazer login. Verifique suas credenciais.");
+        setMensagem({ texto: data.detail || "Erro ao fazer login. Verifique suas credenciais.", tipo: "erro" });
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
-      alert("Não foi possível conectar ao servidor.");
+      setMensagem({ texto: "Não foi possível conectar ao servidor.", tipo: "erro" });
     }
   }
 
@@ -57,6 +58,11 @@ export default function Login() {
 
         <div className="right">
           <form className="form-box" onSubmit={handleSubmit}>
+            {mensagem.texto && (
+              <div role="alert" style={{ color: "#c62828", background: "#ffebee", padding: "10px 14px", borderRadius: "10px", marginBottom: "12px", textAlign: "center", fontSize: "14px" }}>
+                {mensagem.texto}
+              </div>
+            )}
             <div className="input-group">
               <input
                 type="email"

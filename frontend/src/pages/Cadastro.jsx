@@ -7,6 +7,7 @@ import fundo from "../assets/img/fundo.png";
 
 export default function Cadastro() {
   const navigate = useNavigate();
+  const [mensagem, setMensagem] = useState({ texto: "", tipo: "" });
 
   const [form, setForm] = useState({
     nome: "",
@@ -18,7 +19,7 @@ export default function Cadastro() {
     e.preventDefault();
 
     if (form.senha.length < 6) {
-      alert("A senha deve ter pelo menos 6 caracteres.");
+      setMensagem({ texto: "A senha deve ter pelo menos 6 caracteres.", tipo: "erro" });
       return;
     }
 
@@ -35,15 +36,14 @@ export default function Cadastro() {
       const data = await response.json();
 
       if (response.ok) {
-        // TODO: Evitar o uso de alerts. Exibam os erros na tela em vermelho, por exemplo.
-        alert("Cadastro realizado com sucesso!");
-        navigate("/login");
+        setMensagem({ texto: "Cadastro realizado com sucesso!", tipo: "sucesso" });
+        setTimeout(() => navigate("/login"), 1200);
       } else {
-        alert(data.detail || "Erro ao realizar cadastro.");
+        setMensagem({ texto: data.detail || "Erro ao realizar cadastro.", tipo: "erro" });
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
-      alert("Não foi possível conectar ao servidor.");
+      setMensagem({ texto: "Não foi possível conectar ao servidor.", tipo: "erro" });
     }
   }
 
@@ -63,6 +63,11 @@ export default function Cadastro() {
 
         <div className="right">
           <form className="form-box" onSubmit={handleSubmit}>
+            {mensagem.texto && (
+              <div role="alert" style={{ color: mensagem.tipo === "sucesso" ? "#2e7d32" : "#c62828", background: mensagem.tipo === "sucesso" ? "#e8f5e9" : "#ffebee", padding: "16px 14px", borderRadius: "10px", textAlign: "center", fontSize: "14px", marginTop: "30px"}}>
+                {mensagem.texto}
+              </div>
+            )}
             <div className="input-group">
               <input
                 type="text"

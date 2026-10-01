@@ -116,6 +116,7 @@ function IconOption({ item, selected, onSelect }) {
 
 export default function CriarQuadro() {
   const navigate = useNavigate();
+  const [mensagem, setMensagem] = useState({ texto: "", tipo: "" });
 
   const [titulo, setTitulo] = useState("");
   const [descricao, setDescricao] = useState("");
@@ -146,7 +147,7 @@ export default function CriarQuadro() {
     let token = localStorage.getItem("token");
 
     if (!token) {
-      alert("Nenhum token de autenticação encontrado. Faça login novamente.");
+      setMensagem({ texto: "Nenhum token de autenticação encontrado. Faça login novamente.", tipo: "erro" });
       return;
     }
 
@@ -173,17 +174,17 @@ export default function CriarQuadro() {
       if (response.ok) {
         const data = await response.json();
         console.log("Sucesso ao salvar no MySQL:", data);
-        alert("Quadro criado com sucesso!");
-        navigate(`/tarefas/${data.id}`, {
+        setMensagem({ texto: "Quadro criado com sucesso!", tipo: "sucesso" });
+        setTimeout(() => navigate(`/tarefas/${data.id}`, {
           state: { quadro: data },
-        });
+        }), 1000);
       } else {
         const errorData = await response.json();
-        alert(`Erro ao criar quadro: ${errorData.detail || "Falha na requisição"}`);
+        setMensagem({ texto: `Erro ao criar quadro: ${errorData.detail || "Falha na requisição"}`, tipo: "erro" });
       }
     } catch (error) {
       console.error("Erro na conexão com o servidor:", error);
-      alert("Erro ao conectar com o servidor backend.");
+      setMensagem({ texto: "Erro ao conectar com o servidor backend.", tipo: "erro" });
     } finally {
       setSaving(false);
     }
@@ -219,6 +220,11 @@ export default function CriarQuadro() {
             className="cq-form"
             onSubmit={handleCreate}
           >
+            {mensagem.texto && (
+              <div role="alert" style={{ color: mensagem.tipo === "sucesso" ? "#2e7d32" : "#c62828", background: mensagem.tipo === "sucesso" ? "#e8f5e9" : "#ffebee", padding: "10px 14px", borderRadius: "10px", marginBottom: "12px", textAlign: "center", fontSize: "14px" }}>
+                {mensagem.texto}
+              </div>
+            )}
 
             <label
               htmlFor="titulo-quadro"

@@ -17,6 +17,7 @@ const COLUNAS = [
 
 export default function Tarefas() {
   const navigate = useNavigate();
+  const [mensagem, setMensagem] = useState({ texto: "", tipo: "" });
   const { quadroId } = useParams();
   const location = useLocation();
 
@@ -208,6 +209,7 @@ export default function Tarefas() {
   }
 
   function abrirModalCriar(status = "a-fazer") {
+  setMensagem({ texto: "", tipo: "" });
   setModoEdicao(false);
   setTarefaEditando({ status });
   setTituloTarefa("");
@@ -217,6 +219,7 @@ export default function Tarefas() {
   }
 
   function abrirModalEditar(tarefa) {
+  setMensagem({ texto: "", tipo: "" });
   setModoEdicao(true);
   setTarefaEditando(tarefa);
   setTituloTarefa(tarefa.titulo);
@@ -241,7 +244,7 @@ export default function Tarefas() {
   }
 
     if (!dataTarefa) {
-      alert("Selecione uma data no calendário.");
+      setMensagem({ texto: "Selecione uma data no calendário.", tipo: "erro" });
       return;
     }
 
@@ -257,12 +260,12 @@ export default function Tarefas() {
         selecionada.setHours(0, 0, 0, 0);
 
         if (selecionada < hoje) {
-          alert("Não é permitido escolher uma data que já passou.");
+          setMensagem({ texto: "Não é permitido escolher uma data que já passou.", tipo: "erro" });
           return;
         }
       }
 
-      alert("Data inválida. Selecione uma data válida no calendário.");
+      setMensagem({ texto: "Data inválida. Selecione uma data válida no calendário.", tipo: "erro" });
       return;
     }
 
@@ -295,11 +298,11 @@ export default function Tarefas() {
         fecharModal();
       } else {
         const erro = await res.json();
-        alert(erro.detail || "Não foi possível editar a tarefa.");
+        setMensagem({ texto: erro.detail || "Não foi possível editar a tarefa.", tipo: "erro" });
       }
     } catch (err) {
       console.error("Erro ao editar tarefa:", err);
-      alert("Erro ao editar tarefa.");
+      setMensagem({ texto: "Erro ao editar tarefa.", tipo: "erro" });
     }
   } else {
     try {
@@ -327,11 +330,11 @@ export default function Tarefas() {
         fecharModal();
       } else {
         const erro = await res.json();
-        alert(erro.detail || "Não foi possível criar a tarefa.");
+        setMensagem({ texto: erro.detail || "Não foi possível criar a tarefa.", tipo: "erro" });
       }
     } catch (err) {
       console.error("Erro ao criar tarefa:", err);
-      alert("Erro ao criar tarefa.");
+      setMensagem({ texto: "Erro ao criar tarefa.", tipo: "erro" });
     }
   }
 }
@@ -510,7 +513,13 @@ export default function Tarefas() {
               </button>
             </div>
 
-            <form onSubmit={salvarTarefa}>
+            {mensagem.texto && (
+    <div role="alert" style={{ color: "#c62828", background: "#ffebee", padding: "10px 14px", borderRadius: "10px", marginBottom: "12px", textAlign: "center", fontSize: "14px" }}>
+      {mensagem.texto}
+    </div>
+  )}
+
+  <form onSubmit={salvarTarefa}>
               <label>
                 Nome da tarefa
                 <input
