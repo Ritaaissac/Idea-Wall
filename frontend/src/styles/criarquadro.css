@@ -492,9 +492,6 @@ input {
   text-align: center;
 }
 
-/* =========================================================
-   MASCOTE (POSICIONADO MAIS ABAIXO E À DIREITA)
-   ========================================================= */
 
 .cq-bear {
   position: absolute;
@@ -516,9 +513,6 @@ input {
   z-index: 2;
 }
 
-/* =========================================================
-   ACESSIBILIDADE & RESPONSIVO
-   ========================================================= */
 
 .sr-only {
   position: absolute;

@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import {
   FiSearch,
   FiPlus,
-  FiLogOut,
   FiGrid,
   FiUser,
   FiMoreVertical,
@@ -16,19 +15,13 @@ import {
 
 import "../styles/quadros.css";
 import MenuLateral from "../components/MenuLateral";
-
-import logo from "../assets/img/logo.png";
-import usuarioPadrao from "../assets/img/usuario.png";
 import fundo from "../assets/img/fundo.png";
 import urso from "../assets/img/urso5.png";
 
 function IconeQuadro({ tipo }) {
   if (tipo === "escola") {
     return (
-      <svg
-        viewBox="0 0 48 48"
-        className="icone-svg"
-      >
+      <svg viewBox="0 0 48 48" className="icone-svg">
         <path d="M5 18 24 9l19 9-19 9L5 18Z" />
         <path d="M12 23v9c5 4 19 4 24 0v-9" />
         <path d="M43 19v11" />
@@ -38,10 +31,7 @@ function IconeQuadro({ tipo }) {
 
   if (tipo === "trabalho") {
     return (
-      <svg
-        viewBox="0 0 48 48"
-        className="icone-svg"
-      >
+      <svg viewBox="0 0 48 48" className="icone-svg">
         <rect
           x="6"
           y="13"
@@ -62,10 +52,7 @@ function IconeQuadro({ tipo }) {
 
   if (tipo === "viagens") {
     return (
-      <svg
-        viewBox="0 0 48 48"
-        className="icone-svg"
-      >
+      <svg viewBox="0 0 48 48" className="icone-svg">
         <path d="M4 27 44 10 30 43 24 29 4 27Z" />
         <path d="m24 29 9 8" />
       </svg>
@@ -76,9 +63,17 @@ function IconeQuadro({ tipo }) {
 }
 
 export default function Quadros() {
-
   const navigate = useNavigate();
-  const [mensagem, setMensagem] = useState({ texto: "", tipo: "" });
+
+  const [mensagem, setMensagem] = useState({
+    texto: "",
+    tipo: "",
+  });
+
+  const [notificacao, setNotificacao] = useState({
+    texto: "",
+    tipo: "",
+  });
 
   const [quadros, setQuadros] = useState([]);
   const [carregando, setCarregando] = useState(true);
@@ -91,6 +86,8 @@ export default function Quadros() {
 
   const [quadroEditando, setQuadroEditando] = useState(null);
 
+  const [quadroExcluindo, setQuadroExcluindo] = useState(null);
+
   const [dadosEdicao, setDadosEdicao] = useState({
     titulo: "",
     descricao: "",
@@ -99,6 +96,8 @@ export default function Quadros() {
 
   const [salvandoEdicao, setSalvandoEdicao] = useState(false);
 
+  const [excluindo, setExcluindo] = useState(false);
+
   const [resumoTarefas, setResumoTarefas] = useState({
     a_fazer: 0,
     em_andamento: 0,
@@ -106,7 +105,6 @@ export default function Quadros() {
   });
 
   useEffect(() => {
-
     const dados = localStorage.getItem("usuario");
 
     if (dados) {
@@ -116,13 +114,24 @@ export default function Quadros() {
         setUsuario(null);
       }
     }
-
   }, []);
 
+  function mostrarNotificacao(texto, tipo) {
+    setNotificacao({
+      texto,
+      tipo,
+    });
+
+    setTimeout(() => {
+      setNotificacao({
+        texto: "",
+        tipo: "",
+      });
+    }, 3000);
+  }
+
   useEffect(() => {
-
     async function carregarQuadros() {
-
       const tokenSalvo = localStorage.getItem("token");
 
       if (!tokenSalvo) {
@@ -135,7 +144,6 @@ export default function Quadros() {
         .trim();
 
       try {
-
         setCarregando(true);
         setErro("");
 
@@ -143,7 +151,6 @@ export default function Quadros() {
           "http://127.0.0.1:8000/quadros",
           {
             method: "GET",
-
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -151,31 +158,26 @@ export default function Quadros() {
         );
 
         if (response.status === 401) {
-
           localStorage.removeItem("token");
           localStorage.removeItem("usuario");
 
           navigate("/login");
-
           return;
         }
 
         if (!response.ok) {
-
-          let mensagem =
+          let mensagemErro =
             "Não foi possível carregar os quadros.";
 
           try {
             const dados = await response.json();
 
             if (dados.detail) {
-              mensagem = dados.detail;
+              mensagemErro = dados.detail;
             }
+          } catch {}
 
-          } catch {
-          }
-
-          throw new Error(mensagem);
+          throw new Error(mensagemErro);
         }
 
         const dados = await response.json();
@@ -185,9 +187,7 @@ export default function Quadros() {
             ? dados
             : dados.quadros || []
         );
-
       } catch (error) {
-
         console.error(
           "Erro ao carregar quadros:",
           error
@@ -195,18 +195,14 @@ export default function Quadros() {
 
         setErro(
           error.message ||
-          "Erro ao carregar os quadros."
+            "Erro ao carregar os quadros."
         );
-
       } finally {
-
         setCarregando(false);
-
       }
     }
 
     carregarQuadros();
-
   }, [navigate]);
 
   useEffect(() => {
@@ -218,7 +214,9 @@ export default function Quadros() {
         return;
       }
 
-      const token = tokenSalvo.replace(/^"+|"+$/g, "").trim();
+      const token = tokenSalvo
+        .replace(/^"+|"+$/g, "")
+        .trim();
 
       try {
         if (quadros.length === 0) {
@@ -227,33 +225,45 @@ export default function Quadros() {
             em_andamento: 0,
             concluidas: 0,
           });
+
           return;
         }
 
         const respostas = await Promise.all(
           quadros.map((quadro) =>
-            fetch(`http://127.0.0.1:8000/quadros/${quadro.id}/tarefas`, {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            })
+            fetch(
+              `http://127.0.0.1:8000/quadros/${quadro.id}/tarefas`,
+              {
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            )
           )
         );
 
-        const tarefasPorQuadro = await Promise.all(
-          respostas.map(async (response) => {
-            if (!response.ok) {
-              return [];
-            }
+        const tarefasPorQuadro =
+          await Promise.all(
+            respostas.map(async (response) => {
+              if (!response.ok) {
+                return [];
+              }
 
-            const dados = await response.json();
-            return Array.isArray(dados) ? dados : [];
-          })
-        );
+              const dados =
+                await response.json();
 
-        const todasAsTarefas = tarefasPorQuadro.flat();
-        const total = todasAsTarefas.length;
+              return Array.isArray(dados)
+                ? dados
+                : [];
+            })
+          );
+
+        const todasAsTarefas =
+          tarefasPorQuadro.flat();
+
+        const total =
+          todasAsTarefas.length;
 
         if (total === 0) {
           setResumoTarefas({
@@ -261,6 +271,7 @@ export default function Quadros() {
             em_andamento: 0,
             concluidas: 0,
           });
+
           return;
         }
 
@@ -271,28 +282,53 @@ export default function Quadros() {
             .replace(/[\u0300-\u036f]/g, "")
             .replace(/\s+/g, "-");
 
-        const aFazer = todasAsTarefas.filter((tarefa) => {
-          const status = normalizarStatus(tarefa.status);
-          return status === "a-fazer" || status === "a_fazer";
-        }).length;
+        const aFazer =
+          todasAsTarefas.filter((tarefa) => {
+            const status =
+              normalizarStatus(tarefa.status);
 
-        const emAndamento = todasAsTarefas.filter((tarefa) => {
-          const status = normalizarStatus(tarefa.status);
-          return status === "em-andamento";
-        }).length;
+            return (
+              status === "a-fazer" ||
+              status === "a_fazer"
+            );
+          }).length;
 
-        const concluidas = todasAsTarefas.filter((tarefa) => {
-          const status = normalizarStatus(tarefa.status);
-          return status === "concluido";
-        }).length;
+        const emAndamento =
+          todasAsTarefas.filter((tarefa) => {
+            const status =
+              normalizarStatus(tarefa.status);
+
+            return (
+              status === "em-andamento"
+            );
+          }).length;
+
+        const concluidas =
+          todasAsTarefas.filter((tarefa) => {
+            const status =
+              normalizarStatus(tarefa.status);
+
+            return (
+              status === "concluido"
+            );
+          }).length;
 
         setResumoTarefas({
-          a_fazer: Math.round((aFazer / total) * 100),
-          em_andamento: Math.round((emAndamento / total) * 100),
-          concluidas: Math.round((concluidas / total) * 100),
+          a_fazer: Math.round(
+            (aFazer / total) * 100
+          ),
+          em_andamento: Math.round(
+            (emAndamento / total) * 100
+          ),
+          concluidas: Math.round(
+            (concluidas / total) * 100
+          ),
         });
       } catch (error) {
-        console.error("Erro ao carregar tarefas:", error);
+        console.error(
+          "Erro ao carregar tarefas:",
+          error
+        );
       }
     }
 
@@ -300,7 +336,6 @@ export default function Quadros() {
   }, [quadros, navigate]);
 
   const quadrosFiltrados = useMemo(() => {
-
     const texto = pesquisa
       .trim()
       .toLowerCase();
@@ -310,7 +345,6 @@ export default function Quadros() {
     }
 
     return quadros.filter((quadro) => {
-
       const titulo =
         quadro.titulo?.toLowerCase() || "";
 
@@ -321,35 +355,31 @@ export default function Quadros() {
         titulo.includes(texto) ||
         descricao.includes(texto)
       );
-
     });
-
   }, [quadros, pesquisa]);
 
   function logout() {
-
     localStorage.removeItem("token");
     localStorage.removeItem("usuario");
 
     navigate("/login");
-
   }
 
   function obterIcone(quadro) {
-
     return (
       <IconeQuadro
         tipo={quadro.icone}
       />
     );
-
   }
 
   function abrirMenu(e, quadroId) {
     e.stopPropagation();
 
     setMenuAberto(
-      menuAberto === quadroId ? null : quadroId
+      menuAberto === quadroId
+        ? null
+        : quadroId
     );
   }
 
@@ -358,7 +388,11 @@ export default function Quadros() {
 
     setMenuAberto(null);
 
-    setMensagem({ texto: "", tipo: "" });
+    setMensagem({
+      texto: "",
+      tipo: "",
+    });
+
     setQuadroEditando(quadro);
 
     setDadosEdicao({
@@ -369,7 +403,9 @@ export default function Quadros() {
   }
 
   function fecharEdicao() {
-    if (salvandoEdicao) return;
+    if (salvandoEdicao) {
+      return;
+    }
 
     setQuadroEditando(null);
 
@@ -378,17 +414,28 @@ export default function Quadros() {
       descricao: "",
       icone: "pessoal",
     });
+
+    setMensagem({
+      texto: "",
+      tipo: "",
+    });
   }
 
   async function salvarEdicao(e) {
     e.preventDefault();
 
     if (!dadosEdicao.titulo.trim()) {
-      setMensagem({ texto: "Digite um título para o quadro.", tipo: "erro" });
+      setMensagem({
+        texto:
+          "Digite um título para o quadro.",
+        tipo: "erro",
+      });
+
       return;
     }
 
-    const tokenSalvo = localStorage.getItem("token");
+    const tokenSalvo =
+      localStorage.getItem("token");
 
     if (!tokenSalvo) {
       navigate("/login");
@@ -408,21 +455,26 @@ export default function Quadros() {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+            "Content-Type":
+              "application/json",
           },
           body: JSON.stringify({
-            titulo: dadosEdicao.titulo.trim(),
-            descricao: dadosEdicao.descricao.trim(),
+            titulo:
+              dadosEdicao.titulo.trim(),
+            descricao:
+              dadosEdicao.descricao.trim(),
             icone: dadosEdicao.icone,
           }),
         }
       );
 
-      const dados = await response.json();
+      const dados =
+        await response.json();
 
       if (!response.ok) {
         throw new Error(
-          dados.detail || "Não foi possível editar o quadro."
+          dados.detail ||
+            "Não foi possível editar o quadro."
         );
       }
 
@@ -432,11 +484,15 @@ export default function Quadros() {
             ? {
                 ...quadro,
                 ...dados,
-                titulo: dados.titulo ?? dadosEdicao.titulo.trim(),
+                titulo:
+                  dados.titulo ??
+                  dadosEdicao.titulo.trim(),
                 descricao:
                   dados.descricao ??
                   dadosEdicao.descricao.trim(),
-                icone: dados.icone ?? dadosEdicao.icone,
+                icone:
+                  dados.icone ??
+                  dadosEdicao.icone,
               }
             : quadro
         )
@@ -444,33 +500,49 @@ export default function Quadros() {
 
       fecharEdicao();
 
+      mostrarNotificacao(
+        "Quadro editado com sucesso!",
+        "sucesso"
+      );
     } catch (error) {
-      console.error("Erro ao editar quadro:", error);
+      console.error(
+        "Erro ao editar quadro:",
+        error
+      );
 
       setMensagem({
-        texto: error.message || "Não foi possível editar o quadro.",
+        texto:
+          error.message ||
+          "Não foi possível editar o quadro.",
         tipo: "erro",
       });
-
     } finally {
       setSalvandoEdicao(false);
     }
   }
 
-  async function excluirQuadro(e, quadro) {
+  function pedirExclusao(e, quadro) {
     e.stopPropagation();
 
     setMenuAberto(null);
+    setQuadroExcluindo(quadro);
+  }
 
-    const confirmou = window.confirm(
-      `Tem certeza que deseja excluir o quadro "${quadro.titulo}"?\n\nEssa ação não poderá ser desfeita.`
-    );
-
-    if (!confirmou) {
+  function cancelarExclusao() {
+    if (excluindo) {
       return;
     }
 
-    const tokenSalvo = localStorage.getItem("token");
+    setQuadroExcluindo(null);
+  }
+
+  async function confirmarExclusao() {
+    if (!quadroExcluindo) {
+      return;
+    }
+
+    const tokenSalvo =
+      localStorage.getItem("token");
 
     if (!tokenSalvo) {
       navigate("/login");
@@ -482,8 +554,10 @@ export default function Quadros() {
       .trim();
 
     try {
+      setExcluindo(true);
+
       const response = await fetch(
-        `http://127.0.0.1:8000/quadros/${quadro.id}`,
+        `http://127.0.0.1:8000/quadros/${quadroExcluindo.id}`,
         {
           method: "DELETE",
           headers: {
@@ -493,49 +567,65 @@ export default function Quadros() {
       );
 
       if (!response.ok) {
-        let mensagem = "Não foi possível excluir o quadro.";
+        let mensagemErro =
+          "Não foi possível excluir o quadro.";
 
         try {
-          const dados = await response.json();
+          const dados =
+            await response.json();
 
           if (dados.detail) {
-            mensagem = dados.detail;
+            mensagemErro = dados.detail;
           }
-        } catch {
-        }
+        } catch {}
 
-        throw new Error(mensagem);
+        throw new Error(mensagemErro);
       }
 
       setQuadros((quadrosAtuais) =>
         quadrosAtuais.filter(
-          (item) => item.id !== quadro.id
+          (item) =>
+            item.id !==
+            quadroExcluindo.id
         )
       );
 
-    } catch (error) {
-      console.error("Erro ao excluir quadro:", error);
+      setQuadroExcluindo(null);
 
-      setMensagem({
-        texto: error.message || "Não foi possível excluir o quadro.",
-        tipo: "erro",
-      });
+      mostrarNotificacao(
+        "Quadro excluído com sucesso!",
+        "sucesso"
+      );
+    } catch (error) {
+      console.error(
+        "Erro ao excluir quadro:",
+        error
+      );
+
+      setQuadroExcluindo(null);
+
+      mostrarNotificacao(
+        error.message ||
+          "Não foi possível excluir o quadro.",
+        "erro"
+      );
+    } finally {
+      setExcluindo(false);
     }
   }
 
   return (
-
     <main
       className="quadros-page"
-      style={{ backgroundImage: `url(${fundo})` }}
+      style={{
+        backgroundImage: `url(${fundo})`,
+      }}
     >
-
       <MenuLateral />
 
       <section className="quadros-content">
 
         <div className="quadros-search">
-
           <FiSearch />
 
           <input
@@ -546,26 +636,19 @@ export default function Quadros() {
               setPesquisa(e.target.value)
             }
           />
-
         </div>
 
         <div className="quadros-area">
 
           {carregando && (
-
             <div className="quadros-loading">
               Carregando seus quadros...
             </div>
-
           )}
 
           {!carregando && erro && (
-
             <div className="quadros-error">
-
-              <p>
-                {erro}
-              </p>
+              <p>{erro}</p>
 
               <button
                 type="button"
@@ -575,17 +658,13 @@ export default function Quadros() {
               >
                 Tentar novamente
               </button>
-
             </div>
-
           )}
 
           {!carregando &&
             !erro &&
             quadrosFiltrados.length === 0 && (
-
               <div className="quadros-vazio">
-
                 <FiGrid />
 
                 <h2>
@@ -599,45 +678,47 @@ export default function Quadros() {
                   para começar a organizar
                   suas atividades.
                 </p>
-
               </div>
-
             )}
 
           {!carregando &&
             !erro &&
             quadrosFiltrados.map((quadro) => (
-
               <div
                 key={quadro.id}
                 className="quadro-card"
                 onClick={() =>
-                  navigate(`/tarefas/${quadro.id}`, {
-                    state: { quadro },
-                  })
+                  navigate(
+                    `/tarefas/${quadro.id}`,
+                    {
+                      state: { quadro },
+                    }
+                  )
                 }
               >
-
                 <div className="quadro-icon">
                   {obterIcone(quadro)}
                 </div>
 
                 <div className="quadro-info">
-
-                  <h2>{quadro.titulo}</h2>
+                  <h2>
+                    {quadro.titulo}
+                  </h2>
 
                   <p>
                     {quadro.descricao ||
                       "Descrição do quadro..."}
                   </p>
-
                 </div>
 
                 <button
                   type="button"
                   className="dots-button"
                   onClick={(e) =>
-                    abrirMenu(e, quadro.id)
+                    abrirMenu(
+                      e,
+                      quadro.id
+                    )
                   }
                   title="Opções do quadro"
                 >
@@ -645,119 +726,227 @@ export default function Quadros() {
                 </button>
 
                 {menuAberto === quadro.id && (
-
                   <div
                     className="quadro-menu"
                     onClick={(e) =>
                       e.stopPropagation()
                     }
                   >
-
                     <button
                       type="button"
                       className="quadro-menu-item editar"
                       onClick={(e) =>
-                        abrirEdicao(e, quadro)
+                        abrirEdicao(
+                          e,
+                          quadro
+                        )
                       }
                     >
                       <FiEdit2 />
-                      <span>Editar</span>
+                      <span>
+                        Editar
+                      </span>
                     </button>
 
                     <button
                       type="button"
                       className="quadro-menu-item excluir"
                       onClick={(e) =>
-                        excluirQuadro(e, quadro)
+                        pedirExclusao(
+                          e,
+                          quadro
+                        )
                       }
                     >
                       <FiTrash2 />
-                      <span>Excluir quadro</span>
+                      <span>
+                        Excluir quadro
+                      </span>
                     </button>
-
                   </div>
-
                 )}
-
               </div>
-
             ))}
 
           {!carregando &&
             !erro && (
-
               <button
                 type="button"
                 className="novo-quadro-card"
                 onClick={() =>
-                  navigate("/criar-quadro")
+                  navigate(
+                    "/criar-quadro"
+                  )
                 }
               >
-
                 <span>
                   <FiPlus />
                 </span>
-
               </button>
-
             )}
-
         </div>
-
       </section>
 
       <aside className="quadros-right">
         <div className="progresso-item">
           <div className="progresso-header">
             <span>A Fazer</span>
-            <strong>{resumoTarefas.a_fazer}%</strong>
+
+            <strong>
+              {resumoTarefas.a_fazer}%
+            </strong>
           </div>
 
           <div className="barra">
-            <span style={{ width: `${resumoTarefas.a_fazer}%` }} />
+            <span
+              style={{
+                width: `${resumoTarefas.a_fazer}%`,
+              }}
+            />
           </div>
         </div>
 
         <div className="progresso-item">
           <div className="progresso-header">
-            <span>Em andamento</span>
-            <strong>{resumoTarefas.em_andamento}%</strong>
+            <span>
+              Em andamento
+            </span>
+
+            <strong>
+              {resumoTarefas.em_andamento}%
+            </strong>
           </div>
 
           <div className="barra">
-            <span style={{ width: `${resumoTarefas.em_andamento}%` }} />
+            <span
+              style={{
+                width: `${resumoTarefas.em_andamento}%`,
+              }}
+            />
           </div>
         </div>
 
         <div className="progresso-item">
           <div className="progresso-header">
-            <span>Concluídas</span>
-            <strong>{resumoTarefas.concluidas}%</strong>
+            <span>
+              Concluídas
+            </span>
+
+            <strong>
+              {resumoTarefas.concluidas}%
+            </strong>
           </div>
 
           <div className="barra">
-            <span style={{ width: `${resumoTarefas.concluidas}%` }} />
+            <span
+              style={{
+                width: `${resumoTarefas.concluidas}%`,
+              }}
+            />
           </div>
         </div>
 
         <div className="urso-box">
-          <img src={urso} alt="Mascote do Idea Wall" />
+          <img
+            src={urso}
+            alt="Mascote do Idea Wall"
+          />
         </div>
       </aside>
 
-      {quadroEditando && (
+      {mensagem.texto &&
+        quadroEditando && (
+          <div className="mensagem-modal-quadro">
+            {mensagem.texto}
+          </div>
+        )}
 
+      {notificacao.texto && (
+        <div
+          className={`notificacao-quadro ${notificacao.tipo}`}
+        >
+          {notificacao.texto}
+        </div>
+      )}
+
+      {quadroExcluindo && (
+        <div
+          className="confirmacao-exclusao"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="titulo-confirmacao"
+        >
+          <div className="confirmacao-conteudo">
+
+            <div className="confirmacao-icone">
+              <FiTrash2 />
+            </div>
+
+            <div className="confirmacao-texto">
+              <h3 id="titulo-confirmacao">
+                Excluir quadro
+              </h3>
+
+              <p>
+                Tem certeza que deseja
+                excluir o quadro{" "}
+                <strong>
+                  "{quadroExcluindo.titulo}"
+                </strong>
+                ?
+              </p>
+
+              <span>
+                Essa ação não poderá ser
+                desfeita.
+              </span>
+            </div>
+
+            <div className="confirmacao-acoes">
+
+              <button
+                type="button"
+                className="confirmacao-cancelar"
+                onClick={
+                  cancelarExclusao
+                }
+                disabled={excluindo}
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="button"
+                className="confirmacao-excluir"
+                onClick={
+                  confirmarExclusao
+                }
+                disabled={excluindo}
+              >
+                <FiTrash2 />
+
+                {excluindo
+                  ? "Excluindo..."
+                  : "Excluir"}
+              </button>
+
+            </div>
+          </div>
+        </div>
+      )}
+
+      {quadroEditando && (
         <div
           className="modal-quadro-overlay"
           onMouseDown={(e) => {
-
-            if (e.target === e.currentTarget) {
+            if (
+              e.target ===
+              e.currentTarget
+            ) {
               fecharEdicao();
             }
-
           }}
         >
-
           <div className="modal-quadro">
 
             <button
@@ -774,88 +963,99 @@ export default function Quadros() {
               <FiEdit2 />
 
               <div>
-
                 <h2>
                   Editar quadro
                 </h2>
 
                 <p>
-                  Altere as informações do seu quadro.
+                  Altere as informações
+                  do seu quadro.
                 </p>
-
               </div>
-
             </div>
 
             {mensagem.texto && (
-              <div role="alert" style={{ color: "#c62828", background: "#ffebee", padding: "10px 14px", borderRadius: "10px", marginBottom: "12px", textAlign: "center", fontSize: "14px" }}>
+              <div
+                role="alert"
+                className={`mensagem-edicao ${mensagem.tipo}`}
+              >
                 {mensagem.texto}
               </div>
             )}
 
-            <form onSubmit={salvarEdicao}>
-
+            <form
+              onSubmit={salvarEdicao}
+            >
               <div className="campo-quadro-modal">
-
                 <label>
                   Nome do quadro
                 </label>
 
                 <input
                   type="text"
-                  value={dadosEdicao.titulo}
+                  value={
+                    dadosEdicao.titulo
+                  }
                   onChange={(e) =>
                     setDadosEdicao({
                       ...dadosEdicao,
-                      titulo: e.target.value,
+                      titulo:
+                        e.target.value,
                     })
                   }
                   placeholder="Digite o nome do quadro"
                   maxLength={100}
-                  disabled={salvandoEdicao}
+                  disabled={
+                    salvandoEdicao
+                  }
                 />
-
               </div>
 
               <div className="campo-quadro-modal">
-
                 <label>
                   Descrição
                 </label>
 
                 <textarea
-                  value={dadosEdicao.descricao}
+                  value={
+                    dadosEdicao.descricao
+                  }
                   onChange={(e) =>
                     setDadosEdicao({
                       ...dadosEdicao,
-                      descricao: e.target.value,
+                      descricao:
+                        e.target.value,
                     })
                   }
                   placeholder="Digite uma descrição para o quadro"
                   rows="4"
                   maxLength={500}
-                  disabled={salvandoEdicao}
+                  disabled={
+                    salvandoEdicao
+                  }
                 />
-
               </div>
 
               <div className="campo-quadro-modal">
-
                 <label>
                   Ícone
                 </label>
 
                 <select
-                  value={dadosEdicao.icone}
+                  value={
+                    dadosEdicao.icone
+                  }
                   onChange={(e) =>
                     setDadosEdicao({
                       ...dadosEdicao,
-                      icone: e.target.value,
+                      icone:
+                        e.target.value,
                     })
                   }
-                  disabled={salvandoEdicao}
+                  disabled={
+                    salvandoEdicao
+                  }
                 >
-
                   <option value="pessoal">
                     Pessoal
                   </option>
@@ -871,9 +1071,7 @@ export default function Quadros() {
                   <option value="viagens">
                     Viagens
                   </option>
-
                 </select>
-
               </div>
 
               <div className="modal-quadro-acoes">
@@ -881,8 +1079,12 @@ export default function Quadros() {
                 <button
                   type="button"
                   className="modal-quadro-cancelar"
-                  onClick={fecharEdicao}
-                  disabled={salvandoEdicao}
+                  onClick={
+                    fecharEdicao
+                  }
+                  disabled={
+                    salvandoEdicao
+                  }
                 >
                   Cancelar
                 </button>
@@ -890,29 +1092,21 @@ export default function Quadros() {
                 <button
                   type="submit"
                   className="modal-quadro-salvar"
-                  disabled={salvandoEdicao}
+                  disabled={
+                    salvandoEdicao
+                  }
                 >
-
                   <FiSave />
 
                   {salvandoEdicao
                     ? "Salvando..."
                     : "Salvar alterações"}
-
                 </button>
-
               </div>
-
             </form>
-
           </div>
-
         </div>
-
       )}
-
     </main>
-
   );
-
 }
