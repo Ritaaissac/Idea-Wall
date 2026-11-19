@@ -19,3 +19,8 @@ frontend/dist/
 requisitos.zip
 .DS_Store
 Thumbs.db
+# Segredos e bancos locais
+.env
+.env.*
+*.db
+*.sqlite3
