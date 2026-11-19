@@ -3,8 +3,8 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.env
-.env.*
+
+
 
 # Ambiente virtual
 env/
@@ -20,7 +20,7 @@ requisitos.zip
 .DS_Store
 Thumbs.db
 # Segredos e bancos locais
-.env
-.env.*
+
+
 *.db
 *.sqlite3

@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from models.quadro import QuadroCriar
 from models.db_models import Usuario, Quadro, Tarefa
 from database import get_db
-from routes.auth import SECRET_KEY
+from config import SECRET_KEY
 
 
 router = APIRouter(
